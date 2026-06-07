@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCU Managementsysteem — Solid Workforce B.V.</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+/* VCU Managementsysteem — Solid Workforce B.V. */
+:root {
+  --bg: #f4f4f1;
+  --bg2: #fff;
+  --bg3: #f0efeb;
+  --border: rgba(0,0,0,.1);
+  --border2: rgba(0,0,0,.18);
+  --text: #1a1a18;
+  --text2: #666;
+  --text3: #aaa;
+  --blue: #185FA5; --blue-bg: #E6F1FB; --blue-text: #0C447C;
+  --green: #3B6D11; --green-bg: #EAF3DE; --green-text: #27500A;
+  --amber: #BA7517; --amber-bg: #FAEEDA; --amber-text: #854F0B;
+  --red: #A32D2D; --red-bg: #FCEBEB; --red-text: #791F1F;
+  --purple: #534AB7; --purple-bg: #EEEDFE;
+  --coral: #993C1D; --coral-bg: #FAECE7;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+/* ── APP LAYOUT ── */
+#app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar { width: 230px; min-width: 230px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.logo { display: flex; align-items: center; gap: 10px; padding: 16px; border-bottom: 1px solid var(--border); }
+.logo-icon { width: 36px; height: 36px; background: var(--blue); color: #fff; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.logo-name { font-size: 13px; font-weight: 600; }
+.logo-sub { font-size: 10px; color: var(--text2); }
+.nav { flex: 1; overflow-y: auto; padding: 8px 0; }
+.nav-section { padding: 10px 14px 3px; font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; }
+.nav-item { display: flex; align-items: center; gap: 8px; padding: 7px 12px; cursor: pointer; border-radius: 7px; margin: 1px 6px; font-size: 13px; color: var(--text2); text-decoration: none; transition: background .12s; }
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--blue-bg); color: var(--blue); font-weight: 500; }
+.nav-item i { font-size: 16px; min-width: 16px; }
+.badge { margin-left: auto; font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
+.badge.danger { background: var(--red-bg); color: var(--red); }
+.badge.amber { background: var(--amber-bg); color: var(--amber); }
+.badge.blue { background: var(--blue-bg); color: var(--blue); }
+.sidebar-footer { padding: 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
+.btn-export { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: var(--radius); border: 1px solid var(--border2); background: none; color: var(--text2); cursor: pointer; font-size: 12px; transition: background .1s; }
+.btn-export:hover { background: var(--bg3); }
+
+/* ── MAIN ── */
+.main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; min-width: 0; }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; position: sticky; top: 0; z-index: 10; }
+.topbar-title { font-size: 16px; font-weight: 600; flex: 1; }
+.content { padding: 20px; }
+
+/* ── BUTTONS ── */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--bg2); color: var(--text); cursor: pointer; font-size: 13px; font-family: inherit; transition: background .1s; }
+.btn:hover { background: var(--bg3); }
+.btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+.btn-primary:hover { background: var(--blue-text); }
+.btn-success { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-success:hover { background: var(--green-text); }
+.btn-danger { background: var(--red); color: #fff; border-color: var(--red); }
+.btn-amber { background: var(--amber); color: #fff; border-color: var(--amber); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border); background: none; cursor: pointer; color: var(--text2); transition: background .1s; font-size: 14px; }
+.btn-icon:hover { background: var(--bg3); }
+
+/* ── CARDS ── */
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 16px; }
+.card-title { font-size: 13px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.card-title i { font-size: 16px; color: var(--blue); }
+
+/* ── STATS ── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat { background: var(--bg3); border-radius: var(--radius); padding: 14px 16px; }
+.stat-label { font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+.stat-value { font-size: 26px; font-weight: 700; }
+.stat-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+.stat.blue .stat-value { color: var(--blue); }
+.stat.green .stat-value { color: var(--green); }
+.stat.amber .stat-value { color: var(--amber); }
+.stat.red .stat-value { color: var(--red); }
+
+/* ── TABLES ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 12px; font-size: 11px; font-weight: 600; color: var(--text2); border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg3); }
+
+/* ── TAGS ── */
+.tag { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.tag-blue { background: var(--blue-bg); color: var(--blue-text); }
+.tag-green { background: var(--green-bg); color: var(--green-text); }
+.tag-amber { background: var(--amber-bg); color: var(--amber-text); }
+.tag-red { background: var(--red-bg); color: var(--red-text); }
+.tag-gray { background: var(--bg3); color: var(--text2); }
+.tag-purple { background: var(--purple-bg); color: var(--purple); }
+.tag-coral { background: var(--coral-bg); color: var(--coral); }
+
+/* ── ALERTS ── */
+.alert { padding: 10px 14px; border-radius: var(--radius); font-size: 13px; display: flex; align-items: flex-start; gap: 9px; margin-bottom: 14px; }
+.alert i { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+.alert-warn { background: var(--amber-bg); color: var(--amber-text); border: 1px solid #EF9F27; }
+.alert-danger { background: var(--red-bg); color: var(--red-text); border: 1px solid #E24B4A; }
+.alert-success { background: var(--green-bg); color: var(--green-text); border: 1px solid #97C459; }
+.alert-info { background: var(--blue-bg); color: var(--blue-text); border: 1px solid #85B7EB; }
+
+/* ── FORMS ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label { font-size: 12px; font-weight: 500; color: var(--text2); }
+.form-input { padding: 8px 10px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--bg2); color: var(--text); font-size: 13px; font-family: inherit; width: 100%; }
+.form-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 2px rgba(24,95,165,.15); }
+select.form-input { cursor: pointer; }
+textarea.form-input { resize: vertical; }
+
+/* ── PROGRESS ── */
+.pbar { background: var(--bg3); border-radius: 4px; height: 5px; overflow: hidden; }
+.pfill { height: 100%; border-radius: 4px; transition: width .3s; }
+.pbar-wrap { display: flex; align-items: center; gap: 6px; }
+.pbar-wrap .pbar { flex: 1; }
+.pbar-pct { font-size: 11px; min-width: 28px; }
+
+/* ── AVATAR ── */
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+/* ── FASE TIMELINE ── */
+.fase-timeline { display: flex; align-items: flex-start; margin: 12px 0; }
+.fase-step { flex: 1; text-align: center; position: relative; }
+.fase-step::before { content: ''; position: absolute; top: 13px; left: 50%; right: -50%; height: 2px; background: var(--border); z-index: 0; }
+.fase-step:last-child::before { display: none; }
+.fase-circle { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border2); background: var(--bg2); margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; position: relative; z-index: 1; }
+.fase-circle.done { border-color: var(--green); background: var(--green); color: #fff; }
+.fase-circle.active { border-color: var(--blue); background: var(--blue); color: #fff; }
+.fase-label { font-size: 10px; color: var(--text2); line-height: 1.3; }
+
+/* ── SIGNALERING ── */
+.sig-item { border-left: 3px solid; padding: 10px 14px; margin-bottom: 10px; border-radius: 0 8px 8px 0; }
+.sig-danger { border-color: #E24B4A; background: var(--red-bg); }
+.sig-warn { border-color: #EF9F27; background: var(--amber-bg); }
+.sig-info { border-color: #85B7EB; background: var(--blue-bg); }
+.sig-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.sig-meta { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ── HANDTEKENING ── */
+.sig-canvas-wrap { border: 2px dashed var(--border2); border-radius: var(--radius); background: #fafaf8; position: relative; }
+#sig-canvas, #para-canvas { display: block; cursor: crosshair; touch-action: none; width: 100%; }
+.canvas-controls { display: flex; gap: 8px; padding: 8px; border-top: 1px solid var(--border); align-items: center; }
+.sig-preview { border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); min-height: 60px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.sig-preview img { max-height: 55px; max-width: 100%; }
+
+/* ── UPLOAD ZONE ── */
+.upload-zone { border: 2px dashed var(--border2); border-radius: var(--radius); padding: 20px; text-align: center; cursor: pointer; color: var(--text2); transition: all .15s; }
+.upload-zone:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+.upload-zone.has-file { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.upload-zone i { font-size: 28px; display: block; margin-bottom: 6px; }
+
+/* ── BIJLAGE GRID ── */
+.bijlage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.bijlage-card { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer; transition: all .12s; }
+.bijlage-card:hover { border-color: var(--blue); background: var(--blue-bg); }
+.bijlage-card.done { border-color: #97C459; background: var(--green-bg); }
+.bijlage-num { width: 28px; height: 28px; border-radius: 6px; background: var(--blue-bg); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.bijlage-card.done .bijlage-num { background: var(--green); color: #fff; }
+
+/* ── CERT CARD ── */
+.cert-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; }
+.cert-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+
+/* ── MODAL ── */
+#modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; display: none; align-items: center; justify-content: center; }
+#modal-overlay.open { display: flex; }
+.modal { background: var(--bg2); border-radius: var(--radius-lg); padding: 24px; width: 580px; max-height: 88vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.18); }
+.modal-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-title { font-size: 16px; font-weight: 700; }
+.modal-close { background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text2); padding: 2px; }
+
+/* ── TOAST ── */
+#toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; padding: 10px 16px; border-radius: var(--radius); font-size: 13px; display: none; align-items: center; gap: 8px; max-width: 340px; box-shadow: var(--shadow); font-weight: 500; }
+
+/* ── HANDBOEK TOC ── */
+.hb-toc-item { padding: 5px 8px; font-size: 12px; cursor: pointer; border-radius: 5px; color: var(--text2); transition: background .1s; }
+.hb-toc-item:hover { background: var(--bg3); color: var(--text); }
+.hb-toc-item.active { background: var(--blue-bg); color: var(--blue); font-weight: 500; }
+
+/* ── CHECKLIST ── */
+.cl-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.cl-item:last-child { border-bottom: none; }
+.cl-check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border2); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background .1s; }
+.cl-check.on { background: var(--green); border-color: var(--green); color: #fff; font-size: 12px; }
+
+/* ── HELPERS ── */
+.flex { display: flex; }
+.ic { align-items: center; }
+.gap1 { gap: 4px; }
+.gap2 { gap: 8px; }
+.gap3 { gap: 12px; }
+.mla { margin-left: auto; }
+.mt1 { margin-top: 4px; }
+.mt2 { margin-top: 8px; }
+.mt3 { margin-top: 14px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.hidden { display: none !important; }
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+/* ── PRINT ── */
+@media print {
+  .sidebar, .topbar, .btn, button { display: none !important; }
+  .main { overflow: visible; }
+  .card { break-inside: avoid; }
+}
+
+/* ══════════════════════════════════════════════════════
+   BIJLAGEN FORMULIEREN
+══════════════════════════════════════════════════════ */
+.bijlage-form-wrap { max-height: 70vh; overflow-y: auto; padding-right: 4px; }
+.bijlage-header { margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--blue); }
+.bijlage-header h2 { font-size: 18px; font-weight: 700; margin: 6px 0 4px; color: var(--blue); }
+.bijlage-header p { font-size: 13px; color: var(--text2); }
+.bijlage-badge { display: inline-block; background: var(--blue); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; margin-bottom: 4px; }
+.bf-section { margin-bottom: 20px; padding: 14px 16px; background: var(--bg3); border-radius: var(--radius); }
+.bf-section-title { font-size: 12px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+/* JA / NEE knoppen */
+.jn-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); gap: 8px; }
+.jn-row:last-child { border-bottom: none; }
+.jn-label { font-size: 13px; flex: 1; }
+.jn-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.jn-btn { padding: 4px 14px; border-radius: 6px; border: 1px solid var(--border2); background: var(--bg2); cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text2); transition: all .12s; }
+.jn-btn:hover { background: var(--bg3); }
+.jn-ja { background: var(--green) !important; color: #fff !important; border-color: var(--green) !important; }
+.jn-nee { background: var(--red) !important; color: #fff !important; border-color: var(--red) !important; }
+
+/* Sterren */
+.ster-wrap { display: flex; gap: 3px; }
+.ster { font-size: 22px; cursor: pointer; color: var(--border2); transition: color .1s; line-height: 1; }
+.ster-on { color: #EF9F27; }
+.ster:hover { color: #EF9F27; }
+
+/* Handtekening velden */
+.sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.sig-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+.sig-field-wrap { display: flex; flex-direction: column; gap: 6px; }
+.sig-field-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .04em; }
+.sig-field-img { max-height: 55px; max-width: 100%; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px; background: #fff; }
+.sig-field-empty { height: 55px; border: 1px dashed var(--border2); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text3); background: var(--bg2); }
+.sig-field-name { font-size: 12px; color: var(--text2); font-style: italic; }
+
+/* Organogram */
+.organogram { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 16px 0; }
+.org-box { background: var(--blue); color: #fff; padding: 10px 20px; border-radius: var(--radius); text-align: center; font-size: 13px; font-weight: 500; min-width: 150px; }
+.org-box small { font-size: 11px; opacity: .8; }
+.org-top { background: var(--blue-text); }
+.org-bottom { background: var(--green); }
+.org-line { width: 2px; height: 20px; background: var(--border2); }
+.org-mid-row { display: flex; gap: 30px; }
+
+/* Beleidsverklaring tekst */
+.beleids-tekst { font-size: 13px; line-height: 1.8; color: var(--text2); padding: 14px; background: var(--bg2); border-radius: var(--radius); border-left: 3px solid var(--blue); }
+
+/* Bijlagen grid klikbaar */
+.bijlage-card { cursor: pointer; }
+.bijlage-card:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════════════════════════════ */
+
+/* Mobile hamburger */
+.mob-menu-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px 8px; }
+.mob-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 90; }
+.mob-overlay.open { display: block; }
+
+@media (max-width: 768px) {
+  /* Layout */
+  #app { flex-direction: column; }
+  .sidebar { position: fixed; left: -240px; top: 0; bottom: 0; z-index: 100; transition: left .25s; box-shadow: 2px 0 12px rgba(0,0,0,.15); }
+  .sidebar.open { left: 0; }
+  .main { width: 100%; height: 100vh; }
+
+  /* Topbar */
+  .topbar { padding: 10px 14px; gap: 8px; flex-wrap: wrap; }
+  .topbar-title { font-size: 14px; }
+  .mob-menu-btn { display: flex; align-items: center; }
+
+  /* Content */
+  .content { padding: 12px; }
+
+  /* Stats grid → 2 kolommen */
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-value { font-size: 20px; }
+
+  /* Grid2 → 1 kolom */
+  .grid2 { grid-template-columns: 1fr; gap: 12px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: 1; }
+
+  /* Bijlagen grid → 1 kolom */
+  .bijlage-grid { grid-template-columns: 1fr; }
+
+  /* Sig row → 1 kolom */
+  .sig-row, .sig-row-3 { grid-template-columns: 1fr; }
+
+  /* Tabel scrollen */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 560px; font-size: 12px; }
+  th, td { padding: 7px 8px; }
+
+  /* Modal */
+  .modal { width: calc(100vw - 24px); margin: 0 12px; padding: 16px; }
+  .bijlage-form-wrap { max-height: 65vh; }
+
+  /* Handboek */
+  #hb-layout { flex-direction: column; }
+
+  /* Buttons */
+  .btn { font-size: 12px; padding: 6px 10px; }
+  .topbar .flex { flex-wrap: wrap; gap: 6px; }
+
+  /* Cards */
+  .card { padding: 12px 14px; margin-bottom: 12px; }
+
+  /* Fase timeline */
+  .fase-timeline { gap: 0; }
+  .fase-label { font-size: 9px; }
+
+  /* JN rij op mobile */
+  .jn-row { flex-wrap: wrap; gap: 6px; }
+}
+
+@media (max-width: 420px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .topbar-title { font-size: 13px; }
+  .btn-sm { padding: 3px 8px; font-size: 11px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="mob-overlay" id="mob-overlay" onclick="closeSidebar()"></div>
+
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-icon"><i class="ti ti-shield-check"></i></div>
+      <div>
+        <div class="logo-name">Solid Workforce</div>
+        <div class="logo-sub">VCU Systeem v2.0</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Overzicht</div>
+      <a class="nav-item active" data-page="dashboard" onclick="closeSidebar()"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" data-page="signalering" onclick="closeSidebar()"><i class="ti ti-bell"></i>Signaleringen<span class="badge danger" id="nb-sig" style="display:none">0</span></a>
+      <div class="nav-section">Medewerkers</div>
+      <a class="nav-item" data-page="medewerkers" onclick="closeSidebar()"><i class="ti ti-users"></i>Medewerkers<span class="badge blue" id="nb-mw">0</span></a>
+      <a class="nav-item" data-page="dossier" onclick="closeSidebar()"><i class="ti ti-folder-open"></i>Personeelsdossiers</a>
+      <a class="nav-item" data-page="handtekening" onclick="closeSidebar()"><i class="ti ti-signature"></i>Handtekening &amp; Paraaf</a>
+      <div class="nav-section">VCU Compliance</div>
+      <a class="nav-item" data-page="bijlagen" onclick="closeSidebar()"><i class="ti ti-files"></i>16 Bijlagen</a>
+      <a class="nav-item" data-page="certificaten" onclick="closeSidebar()"><i class="ti ti-certificate"></i>Certificaten &amp; VCA<span class="badge amber" id="nb-cert" style="display:none">0</span></a>
+      <a class="nav-item" data-page="incidenten" onclick="closeSidebar()"><i class="ti ti-alert-triangle"></i>Incidenten</a>
+      <a class="nav-item" data-page="evaluaties" onclick="closeSidebar()"><i class="ti ti-star"></i>Evaluaties</a>
+      <div class="nav-section">Handboek</div>
+      <a class="nav-item" data-page="handboek" onclick="closeSidebar()"><i class="ti ti-book"></i>VCU Handboek</a>
+      <div class="nav-section">Beheer</div>
+      <a class="nav-item" data-page="inleners" onclick="closeSidebar()"><i class="ti ti-building"></i>Inleners</a>
+      <a class="nav-item" data-page="rapporten" onclick="closeSidebar()"><i class="ti ti-printer"></i>Afdrukken &amp; Export</a>
+      <a class="nav-item" data-page="instellingen" onclick="closeSidebar()"><i class="ti ti-settings"></i>Instellingen</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-export" onclick="App.exportData()"><i class="ti ti-download"></i> Data opslaan</button>
+      <button class="btn-export" onclick="App.importData()"><i class="ti ti-upload"></i> Data laden</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="App.handleImport(event)">
+    </div>
+  </aside>
+  <main class="main" id="main-content"></main>
+</div>
+
+<div id="modal-overlay" onclick="Modal.handleOverlay(event)">
+  <div class="modal" id="modal-box"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+// ── DATA LAAG — opslaan in localStorage + export naar JSON ──
+
+const DB = {
+  // Standaard structuur
+  defaults: {
+    medewerkers: [
+      {id:1,voornaam:"Harun",achternaam:"Aktas",bsn:"***6782",cat:"Eigen",fase:null,start:"2025-01-01",functie:"Intercedent",email:"h.aktas@solidworkforce.nl",telefoon:"+31612345678",inlenerId:1,heeftHandtekening:true,idGecontroleerd:true,vcuVoorlichting:true,actief:true},
+      {id:2,voornaam:"Ahmed",achternaam:"Yilmaz",bsn:"***3341",cat:"Uitzend",fase:1,start:"2025-02-03",functie:"Bouwvakker",email:"a.yilmaz@email.nl",telefoon:"+31687654321",inlenerId:1,heeftHandtekening:false,idGecontroleerd:true,vcuVoorlichting:true,actief:true},
+      {id:3,voornaam:"Piotr",achternaam:"Kowalski",bsn:"***9921",cat:"Uitzend",fase:2,start:"2025-02-10",functie:"Monteur",email:"p.kowalski@email.nl",telefoon:"+31611223344",inlenerId:1,heeftHandtekening:true,idGecontroleerd:true,vcuVoorlichting:true,actief:true},
+      {id:4,voornaam:"Maria",achternaam:"Jansen",bsn:"***5514",cat:"Uitzend",fase:3,start:"2025-01-15",functie:"Logistiek medewerker",email:"m.jansen@email.nl",telefoon:"+31655443322",inlenerId:2,heeftHandtekening:true,idGecontroleerd:true,vcuVoorlichting:true,actief:true},
+      {id:5,voornaam:"Bogdan",achternaam:"Ionescu",bsn:"***7723",cat:"Uitzend",fase:1,start:"2025-02-20",functie:"Bouwvakker",email:"b.ionescu@email.nl",telefoon:"+31699887766",inlenerId:1,heeftHandtekening:false,idGecontroleerd:true,vcuVoorlichting:false,actief:true}
+    ],
+    inleners: [
+      {id:1,naam:"Voorbeeld Bouw B.V.",kvk:"12345678",contact:"Jan de Vries",email:"j.devries@voorbeeldbouw.nl",telefoon:"+31101234567",sector:"Bouw",actief:true},
+      {id:2,naam:"Logistiek XL",kvk:"87654321",contact:"Maria Smit",email:"m.smit@logistiekxl.nl",telefoon:"+31209876543",sector:"Logistiek",actief:true}
+    ],
+    bijlagen: {},   // { mwId: { nr: { compleet, datum, data } } }
+    certificaten: [
+      {id:1,mwId:1,naam:"VCA Basis",nummer:"VCA-2024-001",geldigVanaf:"2024-07-01",geldigTot:"2025-07-01",bestand:null,sigVerzonden:false},
+      {id:2,mwId:3,naam:"VCA Basis",nummer:"VCA-2024-033",geldigVanaf:"2024-11-20",geldigTot:"2025-11-20",bestand:null,sigVerzonden:false},
+      {id:3,mwId:4,naam:"VCA VOL",nummer:"VCA-2023-099",geldigVanaf:"2023-05-05",geldigTot:"2028-05-05",bestand:null,sigVerzonden:false}
+    ],
+    handtekeningen: {},  // { mwId: { hand: dataURL, paraaf: dataURL, datum } }
+    incidenten: [
+      {id:1,mwId:1,inlenerId:1,datum:"2025-02-13",tijdstip:"09:30",locatie:"Bouwlocatie Rotterdam",type:"Bijna-ongeval",beschrijving:"Instabiele ladder op werklocatie",letsel:false,schade:false,status:"Open",melder:"Harun Aktas"}
+    ],
+    evaluaties: [
+      {id:1,mwId:1,inlenerId:1,datum:"2025-02-13",scoreVeiligheid:4,scorePBM:4,scoreKwaliteit:5,scoreWerkhouding:4,inlenerTevreden:true,ukTevreden:true,verbeterpunten:"",acties:""}
+    ],
+    signaleringen: [],
+    overlegverslagen: [
+      {id:1,nummer:1,datum:"2025-02-13",tijd:"10:00",locatie:"Rivium 2E Straat, Capelle a/d IJssel",aanwezig:"Mümin Özer, Sasa Popovic, Harun Aktas, Falco Administratie",agendapunten:"1. Opening\n2. Veiligheid & Gezondheid\n3. Incidenten\n4. VCU-Certificering",beslissingen:"PBM-training plannen, VCU-handboek afronden",actiepunten:"PBM-checklist opstellen, training 22 feb",volgend:"2025-03-13"}
+    ],
+    instellingen: {
+      bedrijfsnaam:"Solid Workforce B.V.",
+      kvk:"93619405",
+      adres:"Rivium 2E Straat, 2909 LG Capelle aan den IJssel",
+      vgmFunctionaris:"S. Popovic",
+      vgmEmail:"s.popovic@solidworkforce.nl",
+      sigDagen:30,
+      sigEmail:true,
+      sigWhatsapp:true,
+      sigSysteem:true,
+      whatsappNr:"+31600000000"
+    },
+    nextIds: { medewerkers:6, inleners:3, certificaten:4, incidenten:2, evaluaties:2, signaleringen:1, overlegverslagen:2 }
+  },
+
+  data: null,
+
+  load() {
+    const opgeslagen = localStorage.getItem('vcu_solidworkforce');
+    if (opgeslagen) {
+      try { this.data = JSON.parse(opgeslagen); }
+      catch(e) { this.data = JSON.parse(JSON.stringify(this.defaults)); }
+    } else {
+      this.data = JSON.parse(JSON.stringify(this.defaults));
+    }
+    // Zorg dat alle keys bestaan (bij updates)
+    for (const key in this.defaults) {
+      if (!(key in this.data)) this.data[key] = JSON.parse(JSON.stringify(this.defaults[key]));
+    }
+  },
+
+  save() {
+    localStorage.setItem('vcu_solidworkforce', JSON.stringify(this.data));
+  },
+
+  nextId(tabel) {
+    if (!this.data.nextIds[tabel]) this.data.nextIds[tabel] = 1;
+    return this.data.nextIds[tabel]++;
+  },
+
+  // Medewerkers
+  getMedewerkers(inclInactief=false) {
+    return this.data.medewerkers.filter(m => inclInactief || m.actief);
+  },
+  getMedewerker(id) { return this.data.medewerkers.find(m => m.id == id); },
+  saveMedewerker(mw) {
+    const idx = this.data.medewerkers.findIndex(m => m.id == mw.id);
+    if (idx >= 0) this.data.medewerkers[idx] = mw;
+    else { mw.id = this.nextId('medewerkers'); this.data.medewerkers.push(mw); }
+    this.save();
+    return mw;
+  },
+  deleteMedewerker(id) {
+    const mw = this.getMedewerker(id);
+    if (mw) { mw.actief = false; this.save(); }
+  },
+
+  // Inleners
+  getInleners() { return this.data.inleners.filter(i => i.actief); },
+  getInlener(id) { return this.data.inleners.find(i => i.id == id); },
+  saveInlener(il) {
+    const idx = this.data.inleners.findIndex(i => i.id == il.id);
+    if (idx >= 0) this.data.inleners[idx] = il;
+    else { il.id = this.nextId('inleners'); this.data.inleners.push(il); }
+    this.save();
+    return il;
+  },
+
+  // Bijlagen
+  getBijlagen(mwId) { return this.data.bijlagen[mwId] || {}; },
+  getBijlage(mwId, nr) { return (this.data.bijlagen[mwId] || {})[nr] || {compleet:false}; },
+  saveBijlage(mwId, nr, data) {
+    if (!this.data.bijlagen[mwId]) this.data.bijlagen[mwId] = {};
+    this.data.bijlagen[mwId][nr] = { ...data, datum: new Date().toISOString().split('T')[0] };
+    this.save();
+  },
+  dossierCompletie(mwId) {
+    const b = this.data.bijlagen[mwId] || {};
+    return Math.round((Object.values(b).filter(x=>x.compleet).length / 16) * 100);
+  },
+
+  // Certificaten
+  getCertificaten(mwId=null) {
+    return mwId ? this.data.certificaten.filter(c=>c.mwId==mwId) : this.data.certificaten;
+  },
+  saveCertificaat(cert) {
+    const idx = this.data.certificaten.findIndex(c=>c.id==cert.id);
+    if (idx>=0) this.data.certificaten[idx] = cert;
+    else { cert.id = this.nextId('certificaten'); this.data.certificaten.push(cert); }
+    this.save();
+    return cert;
+  },
+  deleteCertificaat(id) {
+    this.data.certificaten = this.data.certificaten.filter(c=>c.id!=id);
+    this.save();
+  },
+
+  // Handtekeningen
+  getHandtekening(mwId) { return this.data.handtekeningen[mwId] || null; },
+  saveHandtekening(mwId, hand, paraaf) {
+    this.data.handtekeningen[mwId] = { hand, paraaf, datum: new Date().toISOString() };
+    const mw = this.getMedewerker(mwId);
+    if (mw) { mw.heeftHandtekening = true; }
+    this.save();
+  },
+  deleteHandtekening(mwId) {
+    delete this.data.handtekeningen[mwId];
+    const mw = this.getMedewerker(mwId);
+    if (mw) mw.heeftHandtekening = false;
+    this.save();
+  },
+
+  // Incidenten
+  getIncidenten() { return this.data.incidenten; },
+  saveIncident(inc) {
+    const idx = this.data.incidenten.findIndex(i=>i.id==inc.id);
+    if (idx>=0) this.data.incidenten[idx] = inc;
+    else { inc.id = this.nextId('incidenten'); this.data.incidenten.push(inc); }
+    this.save();
+    return inc;
+  },
+
+  // Evaluaties
+  getEvaluaties() { return this.data.evaluaties; },
+  saveEvaluatie(ev) {
+    const idx = this.data.evaluaties.findIndex(e=>e.id==ev.id);
+    if (idx>=0) this.data.evaluaties[idx] = ev;
+    else { ev.id = this.nextId('evaluaties'); this.data.evaluaties.push(ev); }
+    this.save();
+    return ev;
+  },
+
+  // Signaleringen
+  getSignaleringen(alleenOpen=true) {
+    return alleenOpen ? this.data.signaleringen.filter(s=>s.status==='Open') : this.data.signaleringen;
+  },
+  saveSignalering(sig) {
+    sig.id = this.nextId('signaleringen');
+    sig.datum = new Date().toISOString();
+    sig.status = 'Open';
+    this.data.signaleringen.push(sig);
+    this.save();
+    return sig;
+  },
+  afhandelSignalering(id) {
+    const s = this.data.signaleringen.find(s=>s.id==id);
+    if (s) { s.status='Afgehandeld'; s.afgehandeld=new Date().toISOString(); this.save(); }
+  },
+
+  // Overlegverslagen
+  getOverlegverslagen() { return this.data.overlegverslagen; },
+  saveOverlegverslag(ov) {
+    const idx = this.data.overlegverslagen.findIndex(o=>o.id==ov.id);
+    if (idx>=0) this.data.overlegverslagen[idx] = ov;
+    else { ov.id = this.nextId('overlegverslagen'); this.data.overlegverslagen.push(ov); }
+    this.save();
+    return ov;
+  },
+
+  // Instellingen
+  getInstellingen() { return this.data.instellingen; },
+  saveInstellingen(inst) { this.data.instellingen = inst; this.save(); },
+
+  // Export naar JSON-bestand
+  exportJSON() {
+    const blob = new Blob([JSON.stringify(this.data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `VCU_SolidWorkforce_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  // Import van JSON-bestand
+  importJSON(jsonString) {
+    try {
+      const parsed = JSON.parse(jsonString);
+      this.data = parsed;
+      this.save();
+      return true;
+    } catch(e) { return false; }
+  }
+};
+
+// Veld-namen voor bijlagen
+const BIJLAGEN = [
+  "Directiebeoordeling", "Interne audit", "NEN4400 Certificaat", "Beleidsverklaring",
+  "VGM-certificaat", "MVK Diploma's", "Organogram & Intercedent", "Bedrijfsvoorlichting",
+  "Overlegverslagen", "Medewerkersdossier", "Informatieoverdracht", "Controle Afspraken",
+  "Evaluatie Inleners", "Melding Incidenten", "Medische Geschiktheid", "Blootstellingsrisico's & PMO"
+];
+
+const CERT_TYPEN = ["VCA Basis","VCA VOL","VCU-VIL","BHV","Rijbewijs B","Rijbewijs BE","Rijbewijs C","Heftruck","Werken op hoogte","Overig"];
+
+const PROCEDURES = [
+  {nr:1,titel:"Directiebeoordeling",freq:"Jaarlijks",verantw:"Directie",tekst:"De directiebeoordeling vindt jaarlijks plaats en evalueert of het VGM-beleid voldoet aan de VCU-eisen. De directie bespreekt prestaties, incidenten, audits en verbeterpunten."},
+  {nr:2,titel:"Interne audit",freq:"Jaarlijks",verantw:"Aangewezen auditor",tekst:"De interne audit wordt jaarlijks uitgevoerd om te controleren of het VCU-systeem goed wordt nageleefd en verbeterd kan worden."},
+  {nr:3,titel:"NEN4400 Certificaat",freq:"Periodiek (SNA)",verantw:"Directie",tekst:"Solid Workforce B.V. voldoet aan de normen zoals vastgesteld in het Handboek Normen SNA en is opgenomen in het Register Normering Arbeid."},
+  {nr:4,titel:"Beleidsverklaring",freq:"Jaarlijks herzien",verantw:"Directie",tekst:"De beleidsverklaring vormt de basis voor de aanpak rondom veiligheid, gezondheid en milieu. Het benadrukt de verplichting om te voldoen aan wet- en regelgeving en de VCU-richtlijnen."},
+  {nr:5,titel:"VGM-certificaat",freq:"Zie geldigheid",verantw:"VGM-functionaris",tekst:"Aantoonbare VGM-competentie door middel van een geldig VCU-VIL certificaat. Naam: S. Popovic — Geldig tot: 13-02-2035."},
+  {nr:6,titel:"MVK-functionaris",freq:"Op aanvraag",verantw:"Directie",tekst:"Solid Workforce B.V. schakelt extern een Middelbare Veiligheidskundige (MVK) in via erkende bureaus met de juiste diploma's en certificeringen."},
+  {nr:7,titel:"Organogram & Intercedent",freq:"Bij wijziging",verantw:"Intercedent",tekst:"De intercedent speelt een sleutelrol in het werven, begeleiden en informeren van uitzendkrachten, met aandacht voor veiligheid en naleving van VCU-richtlijnen."},
+  {nr:8,titel:"Bedrijfsvoorlichting",freq:"Bij aanvang",verantw:"Intercedent",tekst:"Nieuwe medewerkers ontvangen een bedrijfsvoorlichting over veiligheid, gezondheid en VCU-richtlijnen, inclusief uitleg over PBM's en incidentmeldingen."},
+  {nr:9,titel:"Overlegverslagen",freq:"Periodiek",verantw:"Notulist",tekst:"Regelmatige overleggen worden gehouden om VCU-naleving, veiligheid en operationele processen te bespreken. Verslagen worden bewaard."},
+  {nr:10,titel:"Medewerkersdossiers",freq:"Continu",verantw:"Intercedent",tekst:"Per medewerker wordt een volledig dossier bijgehouden met alle vereiste documenten, certificaten en ondertekende bijlagen."},
+  {nr:11,titel:"Informatieoverdracht",freq:"Bij aanvang",verantw:"Intercedent",tekst:"Bewijs van informatieoverdracht naar nieuwe medewerkers over veiligheidsregels, PBM's, VCU-regels en verantwoordelijkheden."},
+  {nr:12,titel:"Controle Afspraken",freq:"Periodiek",verantw:"Intercedent",tekst:"Controle op gemaakte afspraken met medewerkers: PBM-gebruik, veiligheidsgedrag, tijdigheid en taakvervulling."},
+  {nr:13,titel:"Evaluatie Inleners",freq:"Periodiek",verantw:"Intercedent",tekst:"Evaluatie van de samenwerking tussen inlener, uitzendkracht en Solid Workforce. Beoordeeld op veiligheid, kwaliteit en werkhouding."},
+  {nr:14,titel:"Melding Incidenten",freq:"Bij incident",verantw:"Melder + VGM",tekst:"Procedure voor melding en registratie van (bijna-)ongevallen en incidenten. Direct melden, situatie veiligstellen, formulier invullen."},
+  {nr:15,titel:"Medische Geschiktheid",freq:"Bij plaatsing",verantw:"Intercedent",tekst:"Overleg met inlener over medische geschiktheid van uitzendkrachten bij hun tewerkstelling, conform de VCU-richtlijnen en Arbowet."},
+  {nr:16,titel:"Blootstellingsrisico's & PMO",freq:"Bij plaatsing",verantw:"Intercedent + Inlener",tekst:"Vastleggen voor welke functies periodiek medisch onderzoek vereist is op basis van blootstellingsrisico's (stoffen, lawaai, trillingen etc.)."}
+];
+
+</script>
+<script>
+// ── HOOFD APP CONTROLLER ──
+
+const App = {
+  currentPage: 'dashboard',
+
+  init() {
+    DB.load();
+    this.setupNav();
+    this.navigate('dashboard');
+    Signalering.checkAll();
+    this.updateBadges();
+  },
+
+  setupNav() {
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.addEventListener('click', () => {
+        const page = el.dataset.page;
+        if (page) this.navigate(page);
+      });
+    });
+  },
+
+  navigate(page) {
+    this.currentPage = page;
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.page === page);
+    });
+    const main = document.getElementById('main-content');
+    main.innerHTML = Pages[page] ? Pages[page]() : '<div class="content"><p>Pagina niet gevonden.</p></div>';
+    if (typeof window[`init_${page}`] === 'function') window[`init_${page}`]();
+    this.updateBadges();
+  },
+
+  updateBadges() {
+    const sigs = DB.getSignaleringen(true).length;
+    const expCerts = DB.getCertificaten().filter(c => {
+      const dagen = daysDiff(c.geldigTot);
+      return dagen <= DB.getInstellingen().sigDagen && dagen >= 0;
+    }).length;
+    document.getElementById('nb-sig').textContent = sigs;
+    document.getElementById('nb-sig').style.display = sigs > 0 ? '' : 'none';
+    document.getElementById('nb-mw').textContent = DB.getMedewerkers().length;
+    document.getElementById('nb-cert').textContent = expCerts;
+    document.getElementById('nb-cert').style.display = expCerts > 0 ? '' : 'none';
+  },
+
+  exportData() {
+    DB.exportJSON();
+    Toast.show('Data opgeslagen als JSON-bestand', 'success');
+  },
+
+  importData() {
+    document.getElementById('import-file').click();
+  },
+
+  handleImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      if (DB.importJSON(ev.target.result)) {
+        Toast.show('Data geladen!', 'success');
+        this.navigate(this.currentPage);
+        this.updateBadges();
+      } else {
+        Toast.show('Ongeldig bestand', 'danger');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+};
+
+// ── TOAST ──
+const Toast = {
+  timer: null,
+  show(msg, type='info') {
+    const el = document.getElementById('toast');
+    const styles = {
+      success: { bg: '#EAF3DE', color: '#27500A', icon: 'ti-check' },
+      danger:  { bg: '#FCEBEB', color: '#791F1F', icon: 'ti-alert-triangle' },
+      warn:    { bg: '#FAEEDA', color: '#854F0B', icon: 'ti-alert-triangle' },
+      info:    { bg: '#E6F1FB', color: '#0C447C', icon: 'ti-info-circle' }
+    };
+    const s = styles[type] || styles.info;
+    el.style.background = s.bg;
+    el.style.color = s.color;
+    el.style.border = `1px solid ${s.color}`;
+    el.innerHTML = `<i class="ti ${s.icon}"></i>${msg}`;
+    el.style.display = 'flex';
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => el.style.display = 'none', 3500);
+  }
+};
+
+// ── HULPFUNCTIES ──
+function H(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function daysDiff(dateStr) {
+  if (!dateStr) return 9999;
+  const d = new Date(dateStr);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  return Math.round((d - now) / 86400000);
+}
+
+function formatDate(str) {
+  if (!str) return '—';
+  const d = new Date(str);
+  return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+}
+
+function wekenGewerkt(startStr) {
+  if (!startStr) return 0;
+  return Math.floor((new Date() - new Date(startStr)) / (7 * 86400000));
+}
+
+function mwNaam(mw) { return mw ? `${mw.voornaam} ${mw.achternaam}` : '—'; }
+
+function mwAvatar(mw, size=32) {
+  const initials = (mw.voornaam[0]||'') + (mw.achternaam[0]||'');
+  const colors = [
+    ['#E6F1FB','#185FA5'],['#FAEEDA','#BA7517'],['#EAF3DE','#3B6D11'],
+    ['#EEEDFE','#534AB7'],['#FAECE7','#993C1D'],['#FCEBEB','#A32D2D']
+  ];
+  const [bg,fg] = colors[mw.id % colors.length];
+  return `<div class="avatar" style="width:${size}px;height:${size}px;background:${bg};color:${fg};">${initials}</div>`;
+}
+
+function faseTag(mw) {
+  if (mw.cat === 'Eigen') return '<span class="tag tag-green">Eigen personeel</span>';
+  if (mw.cat === 'ZZP') return '<span class="tag tag-coral">ZZP</span>';
+  if (mw.cat === 'Onderaannemer') return '<span class="tag tag-gray">Onderaannemer</span>';
+  const map = {1:['tag-green','Fase 1'],2:['tag-amber','Fase 2'],3:['tag-blue','Fase 3'],4:['tag-purple','Fase 4']};
+  const [cls,lbl] = map[mw.fase] || ['tag-gray','?'];
+  return `<span class="tag ${cls}">${lbl}</span>`;
+}
+
+function pbarHtml(pct) {
+  const c = pct===100?'#639922':pct>=60?'#EF9F27':'#E24B4A';
+  return `<div class="pbar-wrap"><div class="pbar" style="flex:1;"><div class="pfill" style="width:${pct}%;background:${c};"></div></div><span class="pbar-pct">${pct}%</span></div>`;
+}
+
+function certStatusTag(cert) {
+  const d = daysDiff(cert.geldigTot);
+  if (d < 0) return '<span class="tag tag-red">Verlopen</span>';
+  if (d <= 30) return `<span class="tag tag-red">Verloopt over ${d}d</span>`;
+  if (d <= 90) return `<span class="tag tag-amber">Verloopt over ${d}d</span>`;
+  return '<span class="tag tag-green">Geldig</span>';
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => App.init());
+
+</script>
+<script>
+// ── ALLE 16 VCU BIJLAGEN — volledig invulbare formulieren ──
+
+const BijlagenForms = {
+
+  // Render het formulier voor een specifieke bijlage
+  render(nr, mwId) {
+    const mw = DB.getMedewerker(mwId);
+    const data = DB.getBijlage(mwId, nr);
+    const d = data.data || {};
+    const ht = DB.getHandtekening(mwId);
+
+    const sigImg = (label) => ht?.hand
+      ? `<div class="sig-field-wrap"><div class="sig-field-label">${label}</div><img src="${ht.hand}" class="sig-field-img"><div class="sig-field-name">${mwNaam(mw)}</div></div>`
+      : `<div class="sig-field-wrap"><div class="sig-field-label">${label}</div><div class="sig-field-empty">Handtekening nog niet ingesteld</div></div>`;
+
+    const jaNee = (id, label, val) => `
+      <div class="jn-row">
+        <span class="jn-label">${label}</span>
+        <div class="jn-btns">
+          <button class="jn-btn ${val===true?'jn-ja':''}" onclick="setJN('${id}',true,this)">Ja</button>
+          <button class="jn-btn ${val===false?'jn-nee':''}" onclick="setJN('${id}',false,this)">Nee</button>
+        </div>
+      </div>`;
+
+    const sterren = (id, label, val) => `
+      <div class="jn-row">
+        <span class="jn-label">${label}</span>
+        <div class="ster-wrap" data-id="${id}">
+          ${[1,2,3,4,5].map(n=>`<span class="ster ${(val||0)>=n?'ster-on':''}" onclick="setSter('${id}',${n},this.parentElement)">★</span>`).join('')}
+        </div>
+      </div>`;
+
+    const fi = (id, label, val, type='text', placeholder='') => `
+      <div class="form-group">
+        <div class="form-label">${label}</div>
+        <input type="${type}" class="form-input" id="bf-${id}" value="${H(val||'')}" placeholder="${placeholder}" onchange="setBF('${id}',this.value)">
+      </div>`;
+
+    const ta = (id, label, val, rows=3) => `
+      <div class="form-group full">
+        <div class="form-label">${label}</div>
+        <textarea class="form-input" id="bf-${id}" rows="${rows}" onchange="setBF('${id}',this.value)">${H(val||'')}</textarea>
+      </div>`;
+
+    const forms = {
+
+      // ── BIJLAGE 1: Directiebeoordeling ──────────────────
+      1: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 1</div>
+          <h2>Directiebeoordeling</h2>
+          <p>Jaarlijkse evaluatie van het VGM-beleid — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Algemene gegevens</div>
+          <div class="form-grid">
+            ${fi('db_datum','Datum beoordeling',d.db_datum,'date')}
+            ${fi('db_door','Uitgevoerd door',d.db_door||'S. Popovic')}
+            ${fi('db_aantalMw','Aantal medewerkers',d.db_aantalMw,'number')}
+            ${fi('db_periode','Beoordelingsperiode',d.db_periode,'text','bijv. 2024-2025')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Bevindingen</div>
+          <div class="form-grid">
+            ${ta('db_bevindingen','Bevindingen VGM-beleid',d.db_bevindingen,4)}
+            ${ta('db_incidenten','Overzicht incidenten afgelopen periode',d.db_incidenten,3)}
+            ${ta('db_audits','Auditresultaten',d.db_audits,3)}
+            ${ta('db_acties','Verbetermaatregelen / actiepunten',d.db_acties,3)}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Certificaten & compliance</div>
+          <div class="form-grid">
+            ${ta('db_certs','Status certificaten (VCA, NEN4400, VCU-VIL)',d.db_certs,3)}
+            ${fi('db_volgend','Volgende beoordeling gepland op',d.db_volgend,'date')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Ondertekening</div>
+          <div class="sig-row">
+            ${sigImg('Directeur — Mümin Özer')}
+            ${sigImg('VGM-functionaris — S. Popovic')}
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 2: Interne Audit ─────────────────────────
+      2: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 2</div>
+          <h2>Interne Audit</h2>
+          <p>Interne Auditrapportage VCU — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Auditgegevens</div>
+          <div class="form-grid">
+            ${fi('ia_datum','Datum audit',d.ia_datum,'date')}
+            ${fi('ia_door','Uitgevoerd door',d.ia_door||'S. Popovic')}
+            ${fi('ia_type','Type audit',d.ia_type||'Nulmeting')}
+            ${fi('ia_doel','Doel',d.ia_doel||'Nulmeting ter voorbereiding op VCU-certificering')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Controlepunten</div>
+          ${jaNee('ia_vgmbeleid','VGM-beleid aanwezig en gedocumenteerd',d.ia_vgmbeleid)}
+          ${jaNee('ia_procedures','Operationele procedures aanwezig',d.ia_procedures)}
+          ${jaNee('ia_incidentreg','Incidentenregistratie op orde',d.ia_incidentreg)}
+          ${jaNee('ia_training','Medewerkers VCU-getraind',d.ia_training)}
+          ${jaNee('ia_pbm','PBM-beleid geïmplementeerd',d.ia_pbm)}
+          ${jaNee('ia_docs','Essentiële documenten aanwezig (RI&E, instructies)',d.ia_docs)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Bevindingen & Acties</div>
+          <div class="form-grid">
+            ${ta('ia_bevindingen','Bevindingen',d.ia_bevindingen,4)}
+            ${ta('ia_acties','Actiepunten',d.ia_acties,3)}
+            ${ta('ia_conclusie','Conclusie',d.ia_conclusie,3)}
+            ${fi('ia_volgend','Volgende audit gepland',d.ia_volgend,'date')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Ondertekening</div>
+          <div class="sig-row">
+            ${sigImg('Auditor')}
+            ${sigImg('Directie')}
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 3: NEN4400 Certificaat ──────────────────
+      3: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 3</div>
+          <h2>NEN4400 Certificaat</h2>
+          <p>Erkenning normering arbeid — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Certificaatgegevens</div>
+          <div class="form-grid">
+            ${fi('nen_nr','Certificaatnummer',d.nen_nr)}
+            ${fi('nen_van','Geldig vanaf',d.nen_van,'date')}
+            ${fi('nen_tot','Geldig tot',d.nen_tot,'date')}
+            ${fi('nen_instelling','Afgegeven door',d.nen_instelling||'SNA (Stichting Normering Arbeid)')}
+            ${fi('nen_norm','Norm',d.nen_norm||'NEN 4400-1')}
+            ${fi('nen_register','Opgenomen in register',d.nen_register||'Register Normering Arbeid')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Status</div>
+          ${jaNee('nen_geldig','Certificaat actueel en geldig',d.nen_geldig)}
+          ${jaNee('nen_inspectie','Laatste inspectie geslaagd',d.nen_inspectie)}
+          <div class="form-grid mt2">
+            ${fi('nen_inspDatum','Datum laatste inspectie',d.nen_inspDatum,'date')}
+            ${fi('nen_volgend','Volgende inspectie',d.nen_volgend,'date')}
+            ${ta('nen_opm','Opmerkingen',d.nen_opm,2)}
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 4: Beleidsverklaring ────────────────────
+      4: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 4</div>
+          <h2>Beleidsverklaring</h2>
+          <p>VGM-beleidsverklaring — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Beleidsverklaring</div>
+          <div class="beleids-tekst">
+            Solid Workforce B.V. streeft naar een veilige en gezonde werkomgeving voor zowel medewerkers als uitzendkrachten. Wij voldoen aan alle relevante wet- en regelgeving, waaronder de VCU-richtlijnen. Ons doel is het voorkomen van ongevallen, incidenten en gezondheidsrisico's door een actieve veiligheids- en gezondheidscultuur te bevorderen en ons veiligheidsmanagementsysteem continu te verbeteren.
+          </div>
+          <div class="form-grid mt3">
+            ${fi('bv_datum','Datum',d.bv_datum||'2025-02-19','date')}
+            ${fi('bv_locatie','Locatie',d.bv_locatie||'Rotterdam')}
+            ${ta('bv_aanvulling','Aanvullende bepalingen / wijzigingen',d.bv_aanvulling,3)}
+            ${fi('bv_herziend','Jaarlijks herzien op',d.bv_herziend,'date')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Ondertekening Directie</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Mümin Özer — Directeur</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">Handtekening instellen</div>'}
+              <div class="form-group mt2"><div class="form-label">Datum</div><input type="date" class="form-input" id="bf-bv_datumDir" value="${H(d.bv_datumDir||'')}" onchange="setBF('bv_datumDir',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">S. Popovic — Directeur</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">Handtekening instellen</div>'}
+              <div class="form-group mt2"><div class="form-label">Datum</div><input type="date" class="form-input" id="bf-bv_datumVgm" value="${H(d.bv_datumVgm||'')}" onchange="setBF('bv_datumVgm',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 5: VGM-certificaat ──────────────────────
+      5: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 5</div>
+          <h2>VGM-certificaat</h2>
+          <p>VCU-VIL certificaat VGM-functionaris — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Certificaathouder</div>
+          <div class="form-grid">
+            ${fi('vgm_naam','Naam certificaathouder',d.vgm_naam||'S. Popovic')}
+            ${fi('vgm_type','Type certificaat',d.vgm_type||'VCU-VIL')}
+            ${fi('vgm_nr','Diplomanummer',d.vgm_nr||'1878770.05741504')}
+            ${fi('vgm_van','Geldig vanaf',d.vgm_van,'date')}
+            ${fi('vgm_tot','Geldig tot',d.vgm_tot||'2035-02-13','date')}
+            ${fi('vgm_instelling','Afgegeven door',d.vgm_instelling)}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Status</div>
+          ${jaNee('vgm_geldig','Certificaat actueel en geldig',d.vgm_geldig)}
+          ${jaNee('vgm_aanwezig','Certificaat aanwezig in dossier',d.vgm_aanwezig)}
+          ${ta('vgm_opm','Opmerkingen',d.vgm_opm,2)}
+        </div>`,
+
+      // ── BIJLAGE 6: MVK Diploma ──────────────────────────
+      6: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 6</div>
+          <h2>MVK Diploma's</h2>
+          <p>Middelbare Veiligheidskundige — externe MVK'er Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">MVK-gegevens</div>
+          <div class="form-grid">
+            ${fi('mvk_naam','Naam MVK-functionaris',d.mvk_naam)}
+            ${fi('mvk_bureau','Bureau / organisatie',d.mvk_bureau)}
+            ${fi('mvk_diploma','Diplomatype',d.mvk_diploma||'MVK (Middelbare Veiligheidskundige)')}
+            ${fi('mvk_nr','Diplomanummer',d.mvk_nr)}
+            ${fi('mvk_van','Geldig vanaf',d.mvk_van,'date')}
+            ${fi('mvk_tot','Geldig tot',d.mvk_tot,'date')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Overeenkomst</div>
+          ${jaNee('mvk_overeenkomst','Samenwerkingsovereenkomst aanwezig',d.mvk_overeenkomst)}
+          ${jaNee('mvk_geldig','Diploma geldig en actueel',d.mvk_geldig)}
+          <div class="form-grid mt2">
+            ${fi('mvk_datum','Datum overeenkomst',d.mvk_datum,'date')}
+            ${ta('mvk_opm','Opmerkingen / taakomschrijving',d.mvk_opm,3)}
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 7: Organogram ───────────────────────────
+      7: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 7</div>
+          <h2>Organogram & Intercedent</h2>
+          <p>Organisatiestructuur en rol intercedent — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Organisatiestructuur</div>
+          <div class="organogram">
+            <div class="org-box org-top">Directie<br><small>Mümin Özer</small></div>
+            <div class="org-line"></div>
+            <div class="org-mid-row">
+              <div class="org-box">VGM-functionaris<br><small>S. Popovic</small></div>
+              <div class="org-box">Intercedent<br><small>${mw?mwNaam(mw):'—'}</small></div>
+            </div>
+            <div class="org-line"></div>
+            <div class="org-box org-bottom">Uitzendkrachten</div>
+          </div>
+          <div class="form-grid mt3">
+            ${fi('org_directeur','Naam directeur',d.org_directeur||'Mümin Özer')}
+            ${fi('org_vgm','Naam VGM-functionaris',d.org_vgm||'S. Popovic')}
+            ${fi('org_intercedent','Naam intercedent',d.org_intercedent||mwNaam(mw))}
+            ${fi('org_datum','Datum organogram',d.org_datum,'date')}
+            ${ta('org_taken','Taken & verantwoordelijkheden intercedent',d.org_taken||'Werving & selectie, voorlichting, begeleiding & controle, evaluaties',3)}
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 8: Bedrijfsvoorlichting ─────────────────
+      8: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 8</div>
+          <h2>Bedrijfsvoorlichting</h2>
+          <p>Voorlichting nieuwe medewerker bij aanvang — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Medewerkergegevens</div>
+          <div class="form-grid">
+            ${fi('bvl_naam','Naam medewerker',d.bvl_naam||mwNaam(mw))}
+            ${fi('bvl_datum','Datum voorlichting',d.bvl_datum,'date')}
+            ${fi('bvl_locatie','Locatie',d.bvl_locatie||'Rivium 2E Straat, 2909 LG Capelle aan den IJssel')}
+            ${fi('bvl_functie','Functie',d.bvl_functie||mw?.functie||'')}
+            ${fi('bvl_opdrachtgever','Opdrachtgever',d.bvl_opdrachtgever||DB.getInlener(mw?.inlenerId)?.naam||'')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Onderwerpen besproken</div>
+          ${jaNee('bvl_org','Kennismaking organisatie & VCU-richtlijnen',d.bvl_org)}
+          ${jaNee('bvl_risicos','Werkplekrisico\'s besproken',d.bvl_risicos)}
+          ${jaNee('bvl_pbm','PBM\'s uitgelegd en verstrekt',d.bvl_pbm)}
+          ${jaNee('bvl_incident','Incidentmeldingsprocedure uitgelegd',d.bvl_incident)}
+          ${jaNee('bvl_rechten','Rechten & plichten besproken',d.bvl_rechten)}
+          ${jaNee('bvl_medisch','Medische geschiktheid besproken',d.bvl_medisch)}
+          ${jaNee('bvl_contact','Contactgegevens intercedent/VGM verstrekt',d.bvl_contact)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Ondertekening</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Handtekening medewerker</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">Handtekening instellen via menu</div>'}
+              <div class="sig-field-name">${mwNaam(mw)}</div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Handtekening Solid Workforce B.V.</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="sig-field-name">Mümin Özer — Directeur</div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 9: Overlegverslagen ─────────────────────
+      9: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 9</div>
+          <h2>Overlegverslagen</h2>
+          <p>VGM-overlegverslag — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Vergadergegevens</div>
+          <div class="form-grid">
+            ${fi('ov_nr','Vergadernummer',d.ov_nr||'1','number')}
+            ${fi('ov_datum','Datum',d.ov_datum,'date')}
+            ${fi('ov_tijd','Tijdstip',d.ov_tijd,'time')}
+            ${fi('ov_locatie','Locatie',d.ov_locatie||'Rivium 2E Straat, 2909 LG Capelle aan den IJssel')}
+            ${ta('ov_aanwezig','Aanwezigen',d.ov_aanwezig||'Mümin Özer (Directeur), S. Popovic (Intercedent)',2)}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Agendapunten & Besluiten</div>
+          <div class="form-grid">
+            ${ta('ov_agenda','Agendapunten',d.ov_agenda,4)}
+            ${ta('ov_beslissingen','Beslissingen / besluiten',d.ov_beslissingen,3)}
+            ${ta('ov_acties','Actiepunten',d.ov_acties,3)}
+            ${fi('ov_volgend','Volgende vergadering',d.ov_volgend,'date')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Voor akkoord</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Directeur — Mümin Özer</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ov_datumDir" value="${H(d.ov_datumDir||'')}" onchange="setBF('ov_datumDir',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Notulist — S. Popovic</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ov_datumNot" value="${H(d.ov_datumNot||'')}" onchange="setBF('ov_datumNot',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 10: Medewerkersdossier ──────────────────
+      10: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 10</div>
+          <h2>Medewerkersdossier</h2>
+          <p>Vereiste documenten & checklist — ${mwNaam(mw)}</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Persoonsgegevens</div>
+          <div class="form-grid">
+            ${fi('md_naam','Naam',d.md_naam||mwNaam(mw))}
+            ${fi('md_geb','Geboortedatum',d.md_geb,'date')}
+            ${fi('md_functie','Functie',d.md_functie||mw?.functie)}
+            ${fi('md_start','Startdatum',d.md_start||mw?.start,'date')}
+            ${fi('md_opdrachtgever','Opdrachtgever',d.md_opdrachtgever||DB.getInlener(mw?.inlenerId)?.naam||'')}
+            ${fi('md_contracttype','Contracttype',d.md_contracttype)}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Vereiste documenten</div>
+          ${jaNee('md_id','Identiteitsbewijs gecontroleerd',d.md_id)}
+          ${jaNee('md_vcu','VCU-voorlichting ontvangen',d.md_vcu)}
+          ${jaNee('md_contract','Arbeidscontract ondertekend',d.md_contract)}
+          ${jaNee('md_medisch','Medische keuring (indien van toepassing)',d.md_medisch)}
+          ${jaNee('md_pbm','Persoonlijke beschermingsmiddelen verstrekt',d.md_pbm)}
+          ${jaNee('md_vca','VCA-certificaat (indien van toepassing)',d.md_vca)}
+          ${jaNee('md_certs','Specifieke certificaten/opleidingen aanwezig',d.md_certs)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Opmerkingen</div>
+          <div class="form-grid">
+            ${ta('md_opm','Opmerkingen',d.md_opm,3)}
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 11: Informatieoverdracht ────────────────
+      11: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 11</div>
+          <h2>Informatieoverdracht</h2>
+          <p>Bewijs informatieoverdracht nieuwe medewerker — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Gegevens</div>
+          <div class="form-grid">
+            ${fi('io_datum','Datum',d.io_datum,'date')}
+            ${fi('io_naam','Naam medewerker',d.io_naam||mwNaam(mw))}
+            ${fi('io_functie','Functie',d.io_functie||mw?.functie)}
+            ${fi('io_start','Startdatum',d.io_start||mw?.start,'date')}
+            ${fi('io_opdrachtgever','Opdrachtgever',d.io_opdrachtgever||DB.getInlener(mw?.inlenerId)?.naam||'')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Overgedragen informatie</div>
+          ${jaNee('io_veilig','Veiligheidsvoorschriften',d.io_veilig)}
+          ${jaNee('io_pbm','PBM\'s uitgelegd',d.io_pbm)}
+          ${jaNee('io_vcu','VCU-regels',d.io_vcu)}
+          ${jaNee('io_incident','Incidentmeldingen procedure',d.io_incident)}
+          ${jaNee('io_werkplek','Werkplek & Calamiteiten',d.io_werkplek)}
+          ${jaNee('io_verantw','Verantwoordelijkheden',d.io_verantw)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">PBM's verstrekt</div>
+          ${jaNee('io_schoenen','Veiligheidsschoenen',d.io_schoenen)}
+          ${jaNee('io_helm','Helm',d.io_helm)}
+          ${jaNee('io_gehoor','Gehoorbescherming',d.io_gehoor)}
+          ${jaNee('io_handsch','Handschoenen',d.io_handsch)}
+          <div class="form-group full mt2">
+            <div class="form-label">Overige PBM's verstrekt</div>
+            <input class="form-input" id="bf-io_overige" value="${H(d.io_overige||'')}" onchange="setBF('io_overige',this.value)" placeholder="omschrijving overige PBM's">
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Verklaringen & Handtekeningen</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Handtekening medewerker</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">Handtekening instellen via menu</div>'}
+              <div class="sig-field-name">${mwNaam(mw)}</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-io_datumMw" value="${H(d.io_datumMw||'')}" onchange="setBF('io_datumMw',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Handtekening intercedent/VGM</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="sig-field-name">S. Popovic — VGM-functionaris</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-io_datumVgm" value="${H(d.io_datumVgm||'')}" onchange="setBF('io_datumVgm',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 12: Controle Afspraken ──────────────────
+      12: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 12</div>
+          <h2>Controle Afspraken</h2>
+          <p>Bewijs controle op gemaakte afspraken — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Gegevens</div>
+          <div class="form-grid">
+            ${fi('ca_datum','Datum controle',d.ca_datum,'date')}
+            ${fi('ca_naam','Naam medewerker',d.ca_naam||mwNaam(mw))}
+            ${fi('ca_functie','Functie',d.ca_functie||mw?.functie)}
+            ${fi('ca_start','Startdatum',d.ca_start||mw?.start,'date')}
+            ${fi('ca_opdrachtgever','Opdrachtgever',d.ca_opdrachtgever||DB.getInlener(mw?.inlenerId)?.naam||'')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Controlepunten</div>
+          ${jaNee('ca_veilig','Veiligheidsinstructies opgevolgd',d.ca_veilig)}
+          ${jaNee('ca_pbm','Vereiste PBM\'s gedragen',d.ca_pbm)}
+          ${jaNee('ca_incident','Incidenten of bijna-ongevallen gemeld',d.ca_incident)}
+          ${jaNee('ca_onveilig','Onveilige situaties gemeld',d.ca_onveilig)}
+          ${jaNee('ca_tijd','Op tijd op het werk',d.ca_tijd)}
+          ${jaNee('ca_taken','Taken volgens instructies uitgevoerd',d.ca_taken)}
+          ${jaNee('ca_vragen','Aanvullende vragen of opmerkingen',d.ca_vragen)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Evaluatiegesprek</div>
+          <div class="form-grid">
+            ${fi('ca_datumGesprek','Datum gesprek',d.ca_datumGesprek,'date')}
+            ${ta('ca_verbeter','Verbeterpunten',d.ca_verbeter,3)}
+            ${ta('ca_acties','Actiepunten',d.ca_acties,3)}
+            ${ta('ca_opmMw','Opmerkingen medewerker',d.ca_opmMw,2)}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Handtekeningen</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Handtekening medewerker</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">Handtekening instellen via menu</div>'}
+              <div class="sig-field-name">${mwNaam(mw)}</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ca_datumMw" value="${H(d.ca_datumMw||'')}" onchange="setBF('ca_datumMw',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Handtekening intercedent/VGM</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="sig-field-name">S. Popovic</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ca_datumVgm" value="${H(d.ca_datumVgm||'')}" onchange="setBF('ca_datumVgm',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 13: Evaluatie Inleners ──────────────────
+      13: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 13</div>
+          <h2>Evaluatie Inleners / Uitzendkrachten</h2>
+          <p>Periodieke evaluatie — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Gegevens</div>
+          <div class="form-grid">
+            ${fi('ev_datum','Datum',d.ev_datum,'date')}
+            ${fi('ev_uk','Naam uitzendkracht',d.ev_uk||mwNaam(mw))}
+            ${fi('ev_functie','Functie',d.ev_functie||mw?.functie)}
+            ${fi('ev_opdrachtgever','Opdrachtgever',d.ev_opdrachtgever||DB.getInlener(mw?.inlenerId)?.naam||'')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">1. Evaluatie door Inlener</div>
+          ${sterren('ev_inlVeilig','Veiligheidsvoorschriften',d.ev_inlVeilig)}
+          ${sterren('ev_inlPBM','PBM\'s gebruik',d.ev_inlPBM)}
+          ${sterren('ev_inlKwal','Kwaliteit werk',d.ev_inlKwal)}
+          ${sterren('ev_inlWerk','Werkhouding',d.ev_inlWerk)}
+          ${jaNee('ev_inlTevreden','Tevreden — samenwerking voortzetten',d.ev_inlTevreden)}
+          ${ta('ev_inlOpm','Opmerkingen inlener',d.ev_inlOpm,2)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">2. Evaluatie door Uitzendkracht</div>
+          ${sterren('ev_ukInstr','Instructies duidelijk',d.ev_ukInstr)}
+          ${sterren('ev_ukBegeleid','Begeleiding',d.ev_ukBegeleid)}
+          ${sterren('ev_ukSfeer','Werksfeer',d.ev_ukSfeer)}
+          ${jaNee('ev_ukTevreden','Tevreden — wil blijven werken',d.ev_ukTevreden)}
+          ${ta('ev_ukOpm','Opmerkingen uitzendkracht',d.ev_ukOpm,2)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">3. Actiepunten</div>
+          ${jaNee('ev_acties','Verbetermaatregelen nodig',d.ev_acties)}
+          ${ta('ev_actiesOmschr','Acties (indien van toepassing)',d.ev_actiesOmschr,2)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">4. Handtekeningen</div>
+          <div class="sig-row sig-row-3">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Inlener</div>
+              <div class="sig-field-empty" style="height:50px;"></div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ev_datumInl" value="${H(d.ev_datumInl||'')}" onchange="setBF('ev_datumInl',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Uitzendkracht</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty" style="height:50px;"></div>'}
+              <div class="sig-field-name">${mwNaam(mw)}</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ev_datumUK" value="${H(d.ev_datumUK||'')}" onchange="setBF('ev_datumUK',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Intercedent</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty" style="height:50px;"></div>'}
+              <div class="sig-field-name">S. Popovic</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-ev_datumInt" value="${H(d.ev_datumInt||'')}" onchange="setBF('ev_datumInt',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 14: Melding Incidenten ───────────────────
+      14: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 14</div>
+          <h2>Melding Incidenten</h2>
+          <p>Procedure melding & registratie (bijna-)ongevallen — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Incidentgegevens</div>
+          <div class="form-grid">
+            ${fi('mi_datum','Datum incident',d.mi_datum,'date')}
+            ${fi('mi_tijdstip','Tijdstip',d.mi_tijdstip,'time')}
+            ${fi('mi_locatie','Locatie',d.mi_locatie)}
+            ${fi('mi_melder','Melder',d.mi_melder||mwNaam(mw))}
+            ${fi('mi_getuigen','Getuigen',d.mi_getuigen)}
+            ${fi('mi_verantw','Verantwoordelijke',d.mi_verantw||'S. Popovic')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Beschrijving</div>
+          ${ta('mi_beschrijving','Beschrijving van het incident',d.mi_beschrijving,4)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Gevolgen</div>
+          ${jaNee('mi_letsel','Lichamelijk letsel',d.mi_letsel)}
+          ${jaNee('mi_schade','Materiële schade',d.mi_schade)}
+          ${jaNee('mi_werkunderbr','Werkonderbreking',d.mi_werkunderbr)}
+          ${jaNee('mi_bijna','Bijna-ongeval',d.mi_bijna)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Oorzaak</div>
+          ${jaNee('mi_menselijk','Menselijke fout',d.mi_menselijk)}
+          ${jaNee('mi_technisch','Technisch falen',d.mi_technisch)}
+          ${jaNee('mi_omgeving','Omgevingsfactoren',d.mi_omgeving)}
+          ${jaNee('mi_instructies','Onvoldoende instructies',d.mi_instructies)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Acties & Maatregelen</div>
+          ${jaNee('mi_veilig','Situatie veiliggesteld',d.mi_veilig)}
+          ${jaNee('mi_hulp','Hulpdiensten ingeschakeld',d.mi_hulp)}
+          ${jaNee('mi_onderzoek','Onderzoek uitgevoerd',d.mi_onderzoek)}
+          ${jaNee('mi_maatregelen','Maatregelen genomen',d.mi_maatregelen)}
+          ${ta('mi_maatregelenOmschr','Omschrijving maatregelen',d.mi_maatregelenOmschr,3)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Handtekeningen</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Melder</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">Handtekening instellen</div>'}
+              <div class="sig-field-name">${mwNaam(mw)}</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-mi_datumMelder" value="${H(d.mi_datumMelder||'')}" onchange="setBF('mi_datumMelder',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">VGM-functionaris</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="sig-field-name">S. Popovic</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-mi_datumVgm" value="${H(d.mi_datumVgm||'')}" onchange="setBF('mi_datumVgm',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 15: Medische Geschiktheid ───────────────
+      15: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 15</div>
+          <h2>Overleg Medische Geschiktheid</h2>
+          <p>Overleg medische geschiktheid uitzendkrachten — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Gegevens</div>
+          <div class="form-grid">
+            ${fi('mg_datum','Datum overleg',d.mg_datum,'date')}
+            ${fi('mg_inlener','Inlener',d.mg_inlener||DB.getInlener(mw?.inlenerId)?.naam||'')}
+            ${fi('mg_functie','Functie uitzendkracht',d.mg_functie||mw?.functie)}
+            ${fi('mg_naam','Naam uitzendkracht',d.mg_naam||mwNaam(mw))}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Beoordeling</div>
+          ${jaNee('mg_keuringVereist','Medische keuring vereist voor functie',d.mg_keuringVereist)}
+          ${jaNee('mg_keuringUitgev','Keuring uitgevoerd',d.mg_keuringUitgev)}
+          ${jaNee('mg_geschikt','Geschikt voor functie',d.mg_geschikt)}
+          ${jaNee('mg_beperkt','Beperkt geschikt (aanpassingen nodig)',d.mg_beperkt)}
+          ${ta('mg_aanpassingen','Benodigde aanpassingen',d.mg_aanpassingen,2)}
+          ${ta('mg_opm','Opmerkingen',d.mg_opm,3)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Handtekeningen</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Inlener</div>
+              <div class="sig-field-empty" style="height:50px;"></div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-mg_datumInl" value="${H(d.mg_datumInl||'')}" onchange="setBF('mg_datumInl',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Intercedent</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="sig-field-name">S. Popovic</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-mg_datumInt" value="${H(d.mg_datumInt||'')}" onchange="setBF('mg_datumInt',this.value)"></div>
+            </div>
+          </div>
+        </div>`,
+
+      // ── BIJLAGE 16: Blootstellingsrisico's ─────────────
+      16: `
+        <div class="bijlage-header">
+          <div class="bijlage-badge">Bijlage 16</div>
+          <h2>Blootstellingsrisico's & PMO</h2>
+          <p>Periodiek Medisch Onderzoek — Solid Workforce B.V.</p>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Gegevens</div>
+          <div class="form-grid">
+            ${fi('bl_datum','Datum',d.bl_datum,'date')}
+            ${fi('bl_naam','Naam uitzendkracht',d.bl_naam||mwNaam(mw))}
+            ${fi('bl_functie','Functie',d.bl_functie||mw?.functie)}
+            ${fi('bl_inlener','Inlener',d.bl_inlener||DB.getInlener(mw?.inlenerId)?.naam||'')}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Blootstellingsrisico's</div>
+          ${jaNee('bl_stoffen','Gevaarlijke stoffen',d.bl_stoffen)}
+          ${jaNee('bl_fysiek','Fysieke belasting',d.bl_fysiek)}
+          ${jaNee('bl_lawaai','Lawaai (>85 dB)',d.bl_lawaai)}
+          ${jaNee('bl_trillingen','Trillingen',d.bl_trillingen)}
+          ${jaNee('bl_straling','Straling',d.bl_straling)}
+          ${jaNee('bl_temp','Extreme temperaturen',d.bl_temp)}
+          ${ta('bl_overige','Overige risico\'s',d.bl_overige,2)}
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">PMO</div>
+          ${jaNee('bl_pmoVereist','PMO vereist voor deze functie',d.bl_pmoVereist)}
+          ${jaNee('bl_pmoUitgev','PMO uitgevoerd',d.bl_pmoUitgev)}
+          <div class="form-grid mt2">
+            ${fi('bl_pmoDatum','Datum PMO',d.bl_pmoDatum,'date')}
+            ${fi('bl_pmoVolgend','Volgend PMO',d.bl_pmoVolgend,'date')}
+            ${ta('bl_opm','Opmerkingen',d.bl_opm,3)}
+          </div>
+        </div>
+        <div class="bf-section">
+          <div class="bf-section-title">Handtekeningen</div>
+          <div class="sig-row">
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Inlener</div>
+              <div class="sig-field-empty" style="height:50px;"></div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-bl_datumInl" value="${H(d.bl_datumInl||'')}" onchange="setBF('bl_datumInl',this.value)"></div>
+            </div>
+            <div class="sig-field-wrap">
+              <div class="sig-field-label">Intercedent</div>
+              ${ht?.hand?`<img src="${ht.hand}" class="sig-field-img">`:'<div class="sig-field-empty">—</div>'}
+              <div class="sig-field-name">S. Popovic</div>
+              <div class="form-group mt2"><input type="date" class="form-input" id="bf-bl_datumInt" value="${H(d.bl_datumInt||'')}" onchange="setBF('bl_datumInt',this.value)"></div>
+            </div>
+          </div>
+        </div>`
+    };
+
+    return forms[nr] || `<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>Formulier ${nr} niet gevonden.</div>`;
+  }
+};
+
+// ── GLOBALE BIJLAGE FUNCTIES ──
+let _currentBijlageMwId = 0;
+let _currentBijlageNr = 0;
+let _currentBijlageData = {};
+
+function openBijlageFormulier(mwId, nr) {
+  _currentBijlageMwId = mwId;
+  _currentBijlageNr = nr;
+  const bestaand = DB.getBijlage(mwId, nr);
+  _currentBijlageData = bestaand.data ? {...bestaand.data} : {};
+
+  const mw = DB.getMedewerker(mwId);
+  const html = BijlagenForms.render(nr, mwId);
+
+  document.getElementById('modal-box').innerHTML = `
+    <div class="modal-hdr">
+      <div class="modal-title">${BIJLAGEN[nr-1]}</div>
+      <button class="modal-close" onclick="Modal.close()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="bijlage-form-wrap">${html}</div>
+    <div class="flex gap2 mt3" style="justify-content:flex-end;flex-wrap:wrap;">
+      <button class="btn" onclick="Print.bijlage(${mwId},${nr})"><i class="ti ti-printer"></i>Afdrukken</button>
+      <button class="btn" onclick="Modal.close()">Annuleren</button>
+      <button class="btn btn-primary" onclick="slaanBijlageOp()"><i class="ti ti-check"></i>Opslaan als compleet</button>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function setBF(key, val) {
+  _currentBijlageData[key] = val;
+}
+
+function setJN(id, val, btn) {
+  _currentBijlageData[id] = val;
+  const wrap = btn.closest('.jn-btns');
+  wrap.querySelectorAll('.jn-btn').forEach(b => b.classList.remove('jn-ja','jn-nee'));
+  btn.classList.add(val ? 'jn-ja' : 'jn-nee');
+}
+
+function setSter(id, val, wrap) {
+  _currentBijlageData[id] = val;
+  wrap.querySelectorAll('.ster').forEach((s,i) => s.classList.toggle('ster-on', i < val));
+}
+
+function slaanBijlageOp() {
+  DB.saveBijlage(_currentBijlageMwId, _currentBijlageNr, {
+    compleet: true,
+    data: _currentBijlageData
+  });
+  Modal.close();
+  Toast.show(`Bijlage ${_currentBijlageNr} opgeslagen als compleet`, 'success');
+  App.updateBadges();
+  // Herlaad huidige pagina
+  if (App.currentPage === 'bijlagen') renderBijlagenGrid(_currentBijlageMwId);
+  if (App.currentPage === 'dossier') loadDossier(_currentBijlageMwId);
+}
+
+</script>
+<script>
+// ── ALLE PAGINA'S ──
+const Pages = {
+
+  // ════════════════ DASHBOARD ════════════════
+  _mobBtn() {
+    return `<button class="mob-menu-btn" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>`;
+  },
+
+  dashboard() {
+    const mws = DB.getMedewerkers();
+    const sigs = DB.getSignaleringen(true);
+    const openInc = DB.getIncidenten().filter(i=>i.status==='Open').length;
+    const expCerts = DB.getCertificaten().filter(c=>daysDiff(c.geldigTot)<=30&&daysDiff(c.geldigTot)>=0);
+    const compliant = mws.filter(m=>DB.dossierCompletie(m.id)===100&&m.heeftHandtekening).length;
+
+    const alertsHtml = [
+      expCerts.length ? `<div class="alert alert-danger"><i class="ti ti-certificate"></i><div><strong>${expCerts.length} certificaat/diploma verloopt binnen 30 dagen.</strong> Bekijk de certificaten pagina.</div></div>` : '',
+      mws.filter(m=>!m.heeftHandtekening).length ? `<div class="alert alert-warn"><i class="ti ti-signature"></i>Medewerkers zonder handtekening: ${mws.filter(m=>!m.heeftHandtekening).map(m=>mwNaam(m)).join(', ')}</div>` : '',
+      sigs.filter(s=>s.urgentie==='Kritiek').length ? `<div class="alert alert-danger"><i class="ti ti-bell"></i>${sigs.filter(s=>s.urgentie==='Kritiek').length} kritieke signalering(en) vereisen directe actie.</div>` : ''
+    ].filter(Boolean).join('');
+
+    const mwRows = mws.slice(0,5).map(mw => {
+      const pct = DB.dossierCompletie(mw.id);
+      const inlener = DB.getInlener(mw.inlenerId);
+      return `<tr>
+        <td><div class="flex ic gap2">${mwAvatar(mw)}<span>${H(mwNaam(mw))}</span></div></td>
+        <td>${faseTag(mw)}</td>
+        <td style="font-size:12px;">${H(inlener?.naam||'—')}</td>
+        <td style="min-width:100px;">${pbarHtml(pct)}</td>
+        <td>${pct===100&&mw.heeftHandtekening?'<span class="tag tag-green">Compliant</span>':'<span class="tag tag-amber">Onvolledig</span>'}</td>
+        <td><button class="btn-icon" onclick="App.navigate('dossier');setTimeout(()=>loadDossier(${mw.id}),100)" title="Dossier"><i class="ti ti-folder-open"></i></button></td>
+      </tr>`;
+    }).join('');
+
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Dashboard</div>
+      <div class="flex gap2">
+        <button class="btn" onclick="App.navigate('rapporten')"><i class="ti ti-printer"></i>Afdrukken</button>
+        <button class="btn btn-primary" onclick="Modal.nieuwMedewerker()"><i class="ti ti-plus"></i>Nieuwe medewerker</button>
+      </div>
+    </div>
+    <div class="content">
+      ${alertsHtml}
+      <div class="stats-grid">
+        <div class="stat blue"><div class="stat-label">Medewerkers actief</div><div class="stat-value">${mws.length}</div><div class="stat-sub">${mws.filter(m=>m.cat==='Uitzend').length} uitzend · ${mws.filter(m=>m.cat==='Eigen').length} eigen</div></div>
+        <div class="stat green"><div class="stat-label">VCU Compliant</div><div class="stat-value">${compliant}</div><div class="stat-sub">Dossier 100% + handtekening</div></div>
+        <div class="stat amber"><div class="stat-label">Open signaleringen</div><div class="stat-value">${sigs.length}</div><div class="stat-sub">Actief openstaand</div></div>
+        <div class="stat red"><div class="stat-label">Open incidenten</div><div class="stat-value">${openInc}</div><div class="stat-sub">Vereisen opvolging</div></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title"><i class="ti ti-bell"></i>Recente signaleringen</div>
+          ${sigs.slice(0,3).map(s=>`<div class="sig-item ${s.urgentie==='Kritiek'?'sig-danger':'sig-warn'}">
+            <div class="sig-title">${H(s.omschrijving)}</div>
+            <div class="sig-meta"><span>${H(s.medewerker)}</span><span class="tag ${s.urgentie==='Kritiek'?'tag-red':'tag-amber'}">${s.urgentie}</span></div>
+          </div>`).join('') || '<p style="color:var(--text2);font-size:13px;">Geen openstaande signaleringen.</p>'}
+          ${sigs.length>0?`<button class="btn btn-sm" onclick="App.navigate('signalering')">Alle signaleringen →</button>`:''}
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-certificate"></i>Certificaten status</div>
+          ${DB.getCertificaten().filter(c=>daysDiff(c.geldigTot)<=90).slice(0,4).map(c=>{
+            const mw = DB.getMedewerker(c.mwId);
+            return `<div class="flex ic gap2" style="margin-bottom:8px;font-size:13px;">
+              ${mwAvatar(mw,26)}<div style="flex:1;">${H(mwNaam(mw))} — ${H(c.naam)}</div>${certStatusTag(c)}
+            </div>`;
+          }).join('') || '<p style="color:var(--text2);font-size:13px;">Alle certificaten actueel.</p>'}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-users"></i>Medewerkers overzicht</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Naam</th><th>Categorie/Fase</th><th>Opdrachtgever</th><th>Dossier</th><th>Status</th><th></th></tr></thead>
+          <tbody>${mwRows}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ SIGNALERINGEN ════════════════
+  signalering() {
+    const sigs = DB.getSignaleringen(false);
+    const open = sigs.filter(s=>s.status==='Open');
+    const afg = sigs.filter(s=>s.status==='Afgehandeld');
+    const inst = DB.getInstellingen();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Signaleringen</div></div>
+    <div class="content">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-settings"></i>Signaleringsinstellingen</div>
+        <div class="flex ic gap3" style="flex-wrap:wrap;font-size:13px;">
+          <span style="color:var(--text2);">Waarschuw</span>
+          <select class="form-input" style="width:120px;" id="inst-dagen" onchange="saveInstelling('sigDagen',parseInt(this.value))">
+            <option value="30" ${inst.sigDagen==30?'selected':''}>30 dagen</option>
+            <option value="60" ${inst.sigDagen==60?'selected':''}>60 dagen</option>
+            <option value="90" ${inst.sigDagen==90?'selected':''}>90 dagen</option>
+          </select>
+          <span style="color:var(--text2);">van tevoren · Kanalen:</span>
+          <label class="flex ic gap1"><input type="checkbox" ${inst.sigSysteem?'checked':''} onchange="saveInstelling('sigSysteem',this.checked)"> Systeem</label>
+          <label class="flex ic gap1"><input type="checkbox" ${inst.sigEmail?'checked':''} onchange="saveInstelling('sigEmail',this.checked)"> E-mail</label>
+          <label class="flex ic gap1"><input type="checkbox" ${inst.sigWhatsapp?'checked':''} onchange="saveInstelling('sigWhatsapp',this.checked)"> WhatsApp</label>
+          <button class="btn btn-sm btn-primary" onclick="Signalering.checkAll();App.navigate('signalering')"><i class="ti ti-refresh"></i>Hercontroleren</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-alert-triangle"></i>Openstaand (${open.length})</div>
+        ${open.length===0?'<p style="color:var(--text2);font-size:13px;">Geen openstaande signaleringen.</p>':''}
+        <div class="table-wrap"><table>
+          <thead><tr><th>Type</th><th>Medewerker</th><th>Omschrijving</th><th>Urgentie</th><th>Datum</th><th></th></tr></thead>
+          <tbody>${open.map(s=>`<tr>
+            <td><span class="tag tag-blue">${H(s.type)}</span></td>
+            <td>${H(s.medewerker)}</td>
+            <td style="font-size:12px;">${H(s.omschrijving)}</td>
+            <td>${s.urgentie==='Kritiek'?'<span class="tag tag-red">Kritiek</span>':'<span class="tag tag-amber">Waarschuwing</span>'}</td>
+            <td style="font-size:12px;">${formatDate(s.datum)}</td>
+            <td><button class="btn-icon" onclick="DB.afhandelSignalering(${s.id});App.navigate('signalering')" title="Afhandelen"><i class="ti ti-check"></i></button></td>
+          </tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>
+      ${afg.length?`<div class="card">
+        <div class="card-title"><i class="ti ti-history"></i>Afgehandeld (${afg.length})</div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Type</th><th>Medewerker</th><th>Omschrijving</th><th>Afgehandeld</th></tr></thead>
+          <tbody>${afg.map(s=>`<tr>
+            <td><span class="tag tag-green">${H(s.type)}</span></td><td>${H(s.medewerker)}</td>
+            <td style="font-size:12px;">${H(s.omschrijving)}</td><td style="font-size:12px;">${formatDate(s.afgehandeld)}</td>
+          </tr>`).join('')}</tbody>
+        </table></div>
+      </div>`:''}
+    </div>`;
+  },
+
+  // ════════════════ MEDEWERKERS ════════════════
+  medewerkers() {
+    const mws = DB.getMedewerkers();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Medewerkers</div>
+      <div class="flex gap2 ic">
+        <input type="text" class="form-input" style="width:180px;" placeholder="Zoeken..." oninput="filterMw(this.value)">
+        <select class="form-input" style="width:140px;" onchange="filterMwCat(this.value)">
+          <option value="">Alle categorieën</option>
+          <option>Eigen</option><option>Uitzend</option><option>ZZP</option><option>Onderaannemer</option>
+        </select>
+        <button class="btn btn-primary" onclick="Modal.nieuwMedewerker()"><i class="ti ti-plus"></i>Nieuw</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="table-wrap"><table id="mw-table">
+          <thead><tr><th>Naam</th><th>Categorie</th><th>Fase</th><th>Start</th><th>Opdrachtgever</th><th>Handtek.</th><th>Dossier</th><th>Acties</th></tr></thead>
+          <tbody id="mw-tbody">${renderMwTbody(mws)}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ DOSSIER ════════════════
+  dossier() {
+    const mws = DB.getMedewerkers();
+    const opts = mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('');
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Personeelsdossier</div>
+      <div class="flex gap2">
+        <select class="form-input" id="dossier-select" style="width:200px;" onchange="loadDossier(parseInt(this.value))">
+          <option value="">— Selecteer medewerker —</option>${opts}
+        </select>
+        <button class="btn" onclick="Print.dossier()"><i class="ti ti-printer"></i>Afdrukken</button>
+        <button class="btn btn-success" onclick="Print.dossierPDF()"><i class="ti ti-file-type-pdf"></i>PDF</button>
+      </div>
+    </div>
+    <div class="content" id="dossier-content">
+      <div class="alert alert-info"><i class="ti ti-info-circle"></i>Selecteer een medewerker om het dossier te bekijken.</div>
+    </div>`;
+  },
+
+  // ════════════════ HANDTEKENING ════════════════
+  handtekening() {
+    const mws = DB.getMedewerkers();
+    const opts = mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('');
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Handtekening & Paraaf</div></div>
+    <div class="content">
+      <div class="alert alert-info"><i class="ti ti-info-circle"></i>Eenmalig instellen per medewerker. Wordt automatisch overgenomen in alle 16 bijlagen en formulieren.</div>
+      <div class="flex ic gap3" style="margin-bottom:16px;">
+        <label class="form-label" style="margin:0;">Medewerker:</label>
+        <select class="form-input" style="width:220px;" id="sig-mw-select" onchange="loadSigStatus(parseInt(this.value))">
+          <option value="">— Selecteer —</option>${opts}
+        </select>
+      </div>
+      <div id="sig-status"></div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title"><i class="ti ti-signature"></i>Handtekening</div>
+          <div class="flex gap2" style="margin-bottom:10px;">
+            <button class="btn btn-sm active" onclick="switchTab('hand','teken')"><i class="ti ti-pencil"></i>Tekenen</button>
+            <button class="btn btn-sm" onclick="switchTab('hand','upload')"><i class="ti ti-upload"></i>Uploaden</button>
+          </div>
+          <div id="hand-teken">
+            <div class="sig-canvas-wrap">
+              <canvas id="sig-canvas" height="130"></canvas>
+              <div class="canvas-controls">
+                <button class="btn btn-sm" onclick="clearCanvas('sig-canvas')"><i class="ti ti-trash"></i>Wissen</button>
+                <select class="form-input" style="width:80px;font-size:12px;" id="sig-color"><option value="#111">Zwart</option><option value="#185FA5">Blauw</option></select>
+                <button class="btn btn-sm btn-primary mla" onclick="saveFromCanvas('hand')"><i class="ti ti-check"></i>Opslaan</button>
+              </div>
+            </div>
+          </div>
+          <div id="hand-upload" class="hidden">
+            <div class="upload-zone" id="hand-upload-zone" onclick="document.getElementById('hand-file').click()">
+              <i class="ti ti-upload"></i><div>Klik of sleep afbeelding hier</div><div style="font-size:11px;margin-top:4px;">PNG of JPG — witte achtergrond</div>
+            </div>
+            <input type="file" id="hand-file" accept="image/*" class="hidden" onchange="handleSigUpload('hand',event)">
+          </div>
+          <div id="hand-preview" class="hidden mt2">
+            <div class="form-label mb-1">Opgeslagen handtekening:</div>
+            <div class="sig-preview"><img id="hand-img" src=""></div>
+            <div class="alert alert-success mt2" style="margin-bottom:0;"><i class="ti ti-check"></i>Handtekening opgeslagen</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-writing"></i>Paraaf</div>
+          <div class="flex gap2" style="margin-bottom:10px;">
+            <button class="btn btn-sm" onclick="switchTab('para','teken')"><i class="ti ti-pencil"></i>Tekenen</button>
+            <button class="btn btn-sm" onclick="switchTab('para','upload')"><i class="ti ti-upload"></i>Uploaden</button>
+          </div>
+          <div id="para-teken">
+            <div class="sig-canvas-wrap">
+              <canvas id="para-canvas" height="130"></canvas>
+              <div class="canvas-controls">
+                <button class="btn btn-sm" onclick="clearCanvas('para-canvas')"><i class="ti ti-trash"></i>Wissen</button>
+                <select class="form-input" style="width:80px;font-size:12px;" id="para-color"><option value="#111">Zwart</option><option value="#185FA5">Blauw</option></select>
+                <button class="btn btn-sm btn-primary mla" onclick="saveFromCanvas('para')"><i class="ti ti-check"></i>Opslaan</button>
+              </div>
+            </div>
+          </div>
+          <div id="para-upload" class="hidden">
+            <div class="upload-zone" id="para-upload-zone" onclick="document.getElementById('para-file').click()">
+              <i class="ti ti-upload"></i><div>Klik of sleep afbeelding hier</div>
+            </div>
+            <input type="file" id="para-file" accept="image/*" class="hidden" onchange="handleSigUpload('para',event)">
+          </div>
+          <div id="para-preview" class="hidden mt2">
+            <div class="form-label">Opgeslagen paraaf:</div>
+            <div class="sig-preview"><img id="para-img" src=""></div>
+            <div class="alert alert-success mt2" style="margin-bottom:0;"><i class="ti ti-check"></i>Paraaf opgeslagen</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-files"></i>Automatisch toegepast in</div>
+        <div class="grid2" style="font-size:13px;">
+          <div style="display:flex;flex-direction:column;gap:6px;">${BIJLAGEN.slice(7,12).map(b=>`<div class="flex ic gap2"><i class="ti ti-check" style="color:var(--green);"></i>${b}</div>`).join('')}</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">${BIJLAGEN.slice(12).map(b=>`<div class="flex ic gap2"><i class="ti ti-check" style="color:var(--green);"></i>${b}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ BIJLAGEN ════════════════
+  bijlagen() {
+    const mws = DB.getMedewerkers();
+    const opts = mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('');
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">16 VCU Bijlagen</div>
+      <select class="form-input" id="bijlage-mw-sel" style="width:220px;" onchange="renderBijlagenGrid(parseInt(this.value))">
+        <option value="">— Selecteer medewerker —</option>${opts}
+      </select>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-title"><i class="ti ti-files"></i>Bijlagenstatus</div>
+        <div id="bijlage-grid" class="bijlage-grid">${renderBijlagenPlaceholder()}</div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ CERTIFICATEN ════════════════
+  certificaten() {
+    const mws = DB.getMedewerkers();
+    const opts = mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('');
+    const allCerts = DB.getCertificaten();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Certificaten & VCA</div>
+      <div class="flex gap2">
+        <select class="form-input" id="cert-mw-sel" style="width:200px;" onchange="renderCertDetail(parseInt(this.value))">
+          <option value="">— Medewerker —</option>${opts}
+        </select>
+        <button class="btn btn-primary" onclick="Modal.nieuwCertificaat()"><i class="ti ti-plus"></i>Toevoegen</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid2">
+        <div class="card">
+          <div class="card-title"><i class="ti ti-certificate"></i>VCA-vereisten per categorie</div>
+          ${[['Uitzendkracht','VCA Basis','tag-green'],['Eigen personeel','VCA VOL','tag-blue'],['ZZP','VCA Basis + VCA VOL','tag-coral'],['Onderaannemer','VCA Basis','tag-gray']].map(([cat,vereist,cls])=>`
+          <div class="cert-card"><div class="cert-icon" style="background:var(--blue-bg);color:var(--blue);"><i class="ti ti-certificate"></i></div>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${cat}</div><div style="font-size:11px;color:var(--text2);">${vereist}</div></div>
+            <span class="tag ${cls}">${vereist}</span></div>`).join('')}
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="ti ti-users"></i>Status per medewerker</div>
+          ${mws.map(mw=>{
+            const certs = DB.getCertificaten(mw.id);
+            const exp = certs.filter(c=>daysDiff(c.geldigTot)<=30&&daysDiff(c.geldigTot)>=0);
+            return `<div class="cert-card" style="cursor:pointer;" onclick="document.getElementById('cert-mw-sel').value=${mw.id};renderCertDetail(${mw.id})">
+              ${mwAvatar(mw,30)}<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;">${H(mwNaam(mw))}</div>
+              <div style="font-size:11px;color:var(--text2);">${certs.length} certificaat/diploma('s)</div></div>
+              ${exp.length?'<span class="tag tag-red">Let op</span>':certs.length===0?'<span class="tag tag-gray">Geen</span>':'<span class="tag tag-green">OK</span>'}
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div id="cert-detail"></div>
+    </div>`;
+  },
+
+  // ════════════════ INCIDENTEN ════════════════
+  incidenten() {
+    const incs = DB.getIncidenten();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Incidenten & Bijna-Ongevallen</div>
+      <button class="btn btn-primary" onclick="Modal.nieuwIncident()"><i class="ti ti-plus"></i>Melden</button>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Datum</th><th>Type</th><th>Medewerker</th><th>Locatie</th><th>Omschrijving</th><th>Status</th><th>Acties</th></tr></thead>
+          <tbody>${incs.map(inc=>{
+            const mw = DB.getMedewerker(inc.mwId);
+            return `<tr>
+              <td>${formatDate(inc.datum)}</td>
+              <td><span class="tag ${inc.type==='Bedrijfsongeval'?'tag-red':inc.type==='Bijna-ongeval'?'tag-amber':'tag-blue'}">${H(inc.type)}</span></td>
+              <td>${H(mwNaam(mw))}</td>
+              <td style="font-size:12px;">${H(inc.locatie||'—')}</td>
+              <td style="font-size:12px;max-width:200px;">${H((inc.beschrijving||'').slice(0,60))}${inc.beschrijving?.length>60?'…':''}</td>
+              <td>${inc.status==='Open'?'<span class="tag tag-amber">Open</span>':inc.status==='Afgehandeld'?'<span class="tag tag-green">Afgehandeld</span>':'<span class="tag tag-blue">In behandeling</span>'}</td>
+              <td class="flex gap1">
+                <button class="btn-icon" onclick="Modal.bekijkIncident(${inc.id})" title="Bekijken"><i class="ti ti-eye"></i></button>
+                ${inc.status==='Open'?`<button class="btn-icon" onclick="sluitIncident(${inc.id})" title="Afhandelen"><i class="ti ti-check"></i></button>`:''}
+              </td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ EVALUATIES ════════════════
+  evaluaties() {
+    const evs = DB.getEvaluaties();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Evaluaties</div>
+      <button class="btn btn-primary" onclick="Modal.nieuweEvaluatie()"><i class="ti ti-plus"></i>Nieuwe evaluatie</button>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Datum</th><th>Medewerker</th><th>Inlener</th><th>Veiligheid</th><th>Kwaliteit</th><th>Conclusie</th></tr></thead>
+          <tbody>${evs.map(ev=>{
+            const mw = DB.getMedewerker(ev.mwId);
+            const il = DB.getInlener(ev.inlenerId);
+            const sterren = n => '⭐'.repeat(Math.min(5,Math.max(0,n||0)));
+            return `<tr>
+              <td>${formatDate(ev.datum)}</td>
+              <td>${H(mwNaam(mw))}</td>
+              <td>${H(il?.naam||'—')}</td>
+              <td>${sterren(ev.scoreVeiligheid)}</td>
+              <td>${sterren(ev.scoreKwaliteit)}</td>
+              <td>${ev.inlenerTevreden?'<span class="tag tag-green">Tevreden</span>':'<span class="tag tag-amber">Verbeterpunten</span>'}</td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ HANDBOEK ════════════════
+  handboek() {
+    const toc = [
+      {key:'intro',label:'Inleiding'},
+      ...PROCEDURES.map(p=>({key:`p${p.nr}`,label:`${p.nr}. ${p.titel}`})),
+      {key:'bijlagen',label:'Bijlagen 1–16'}
+    ];
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">VCU Handboek</div>
+      <div class="flex gap2">
+        <button class="btn" onclick="Print.handboekPDF()"><i class="ti ti-file-type-pdf"></i>PDF afdrukken</button>
+        <button class="btn btn-primary" onclick="Print.handboek()"><i class="ti ti-printer"></i>Afdrukken</button>
+      </div>
+    </div>
+    <div class="content">
+      <div style="display:grid;grid-template-columns:190px 1fr;gap:16px;">
+        <div class="card" style="height:fit-content;padding:12px;">
+          <div class="card-title" style="font-size:11px;margin-bottom:8px;">Inhoudsopgave</div>
+          ${toc.map(t=>`<div class="hb-toc-item" onclick="showHbSection('${t.key}',this)">${t.label}</div>`).join('')}
+        </div>
+        <div class="card" id="hb-content">
+          <div class="alert alert-info"><i class="ti ti-info-circle"></i>Selecteer een hoofdstuk uit de inhoudsopgave.</div>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ INLENERS ════════════════
+  inleners() {
+    const ils = DB.getInleners();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Inleners / Opdrachtgevers</div>
+      <button class="btn btn-primary" onclick="Modal.nieuweInlener()"><i class="ti ti-plus"></i>Nieuw</button>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Bedrijf</th><th>Contact</th><th>Sector</th><th>Actieve mw.</th><th>Email</th><th>Telefoon</th><th>Acties</th></tr></thead>
+          <tbody>${ils.map(il=>{
+            const actief = DB.getMedewerkers().filter(m=>m.inlenerId===il.id).length;
+            return `<tr>
+              <td><strong>${H(il.naam)}</strong></td>
+              <td>${H(il.contact||'—')}</td>
+              <td><span class="tag tag-blue">${H(il.sector||'—')}</span></td>
+              <td>${actief}</td>
+              <td style="font-size:12px;">${H(il.email||'—')}</td>
+              <td style="font-size:12px;">${H(il.telefoon||'—')}</td>
+              <td><button class="btn-icon" onclick="Modal.bewerkInlener(${il.id})"><i class="ti ti-edit"></i></button></td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table></div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ RAPPORTEN ════════════════
+  rapporten() {
+    const mws = DB.getMedewerkers();
+    const opts = mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('');
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Afdrukken & Export</div></div>
+    <div class="content">
+      <div class="grid2">
+        <div class="card"><div class="card-title"><i class="ti ti-book"></i>VCU Handboek</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Volledig handboek incl. alle 16 procedures en bijlagenlijst</p>
+          <div class="flex gap2"><button class="btn btn-primary" onclick="Print.handboek()"><i class="ti ti-printer"></i>Afdrukken</button><button class="btn" onclick="Print.handboekPDF()"><i class="ti ti-file-type-pdf"></i>PDF</button></div>
+        </div>
+        <div class="card"><div class="card-title"><i class="ti ti-folder"></i>Personeelsdossier</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:10px;">Volledig dossier incl. bijlagen, handtekening en certificaten</p>
+          <div class="flex gap2 ic">
+            <select class="form-input" style="flex:1;" id="print-mw-sel">${opts}</select>
+            <button class="btn btn-primary" onclick="Print.dossierById(parseInt(document.getElementById('print-mw-sel').value))"><i class="ti ti-printer"></i>Print</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-title"><i class="ti ti-chart-bar"></i>Compliancerapportage</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Overzicht alle medewerkers met VCU-compliance status</p>
+          <div class="flex gap2">
+            <button class="btn btn-success" onclick="Print.compliance()"><i class="ti ti-printer"></i>Afdrukken</button>
+            <button class="btn" onclick="Export.csv()"><i class="ti ti-table-export"></i>CSV export</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-title"><i class="ti ti-download"></i>Data backup</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Sla alle data op als JSON-bestand op uw laptop</p>
+          <div class="flex gap2">
+            <button class="btn btn-primary" onclick="App.exportData()"><i class="ti ti-download"></i>Opslaan (JSON)</button>
+            <button class="btn" onclick="App.importData()"><i class="ti ti-upload"></i>Laden</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  },
+
+  // ════════════════ INSTELLINGEN ════════════════
+  instellingen() {
+    const inst = DB.getInstellingen();
+    return `
+    <div class="topbar">${this._mobBtn()}<div class="topbar-title">Instellingen</div></div>
+    <div class="content">
+      <div class="card"><div class="card-title"><i class="ti ti-building"></i>Bedrijfsgegevens</div>
+        <div class="form-grid">
+          <div class="form-group"><div class="form-label">Bedrijfsnaam</div><input class="form-input" id="inst-bnaam" value="${H(inst.bedrijfsnaam)}"></div>
+          <div class="form-group"><div class="form-label">KVK-nummer</div><input class="form-input" id="inst-kvk" value="${H(inst.kvk)}"></div>
+          <div class="form-group full"><div class="form-label">Adres</div><input class="form-input" id="inst-adres" value="${H(inst.adres)}"></div>
+          <div class="form-group"><div class="form-label">VGM-functionaris</div><input class="form-input" id="inst-vgm" value="${H(inst.vgmFunctionaris)}"></div>
+          <div class="form-group"><div class="form-label">E-mail VGM</div><input class="form-input" id="inst-email" value="${H(inst.vgmEmail)}"></div>
+        </div>
+        <button class="btn btn-primary mt3" onclick="slaInstellingenOp()"><i class="ti ti-check"></i>Opslaan</button>
+      </div>
+      <div class="card"><div class="card-title"><i class="ti ti-bell"></i>Signalering</div>
+        <div class="form-grid">
+          <div class="form-group"><div class="form-label">Waarschuwingstermijn (dagen)</div>
+            <select class="form-input" id="inst-sigdagen">
+              <option value="30" ${inst.sigDagen==30?'selected':''}>30 dagen</option>
+              <option value="60" ${inst.sigDagen==60?'selected':''}>60 dagen</option>
+              <option value="90" ${inst.sigDagen==90?'selected':''}>90 dagen</option>
+            </select>
+          </div>
+          <div class="form-group"><div class="form-label">WhatsApp nummer</div><input class="form-input" id="inst-wa" value="${H(inst.whatsappNr||'')}"></div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
+          <label class="flex ic gap2"><input type="checkbox" id="inst-sys" ${inst.sigSysteem?'checked':''}> Systeem pop-up</label>
+          <label class="flex ic gap2"><input type="checkbox" id="inst-mail" ${inst.sigEmail?'checked':''}> E-mail</label>
+          <label class="flex ic gap2"><input type="checkbox" id="inst-wa-cb" ${inst.sigWhatsapp?'checked':''}> WhatsApp</label>
+        </div>
+        <button class="btn btn-primary mt3" onclick="slaInstellingenOp()"><i class="ti ti-check"></i>Opslaan</button>
+      </div>
+    </div>`;
+  }
+};
+
+// ── GEDEELDE RENDERERS & HELPERS ──
+
+function renderMwTbody(mws) {
+  return mws.map(mw => {
+    const pct = DB.dossierCompletie(mw.id);
+    const il = DB.getInlener(mw.inlenerId);
+    return `<tr>
+      <td><div class="flex ic gap2">${mwAvatar(mw)}<span>${H(mwNaam(mw))}</span></div></td>
+      <td>${mw.cat==='Eigen'?'<span class="tag tag-green">Eigen</span>':mw.cat==='ZZP'?'<span class="tag tag-coral">ZZP</span>':mw.cat==='Onderaannemer'?'<span class="tag tag-gray">Ondrnmr</span>':'<span class="tag tag-blue">Uitzend</span>'}</td>
+      <td>${faseTag(mw)}</td>
+      <td style="font-size:12px;">${formatDate(mw.start)}</td>
+      <td style="font-size:12px;max-width:120px;">${H(il?.naam||'—')}</td>
+      <td>${mw.heeftHandtekening?'<span class="tag tag-green"><i class="ti ti-check"></i></span>':'<span class="tag tag-amber"><i class="ti ti-clock"></i></span>'}</td>
+      <td style="min-width:100px;">${pbarHtml(pct)}</td>
+      <td><div class="flex gap1">
+        <button class="btn-icon" onclick="App.navigate('dossier');setTimeout(()=>loadDossier(${mw.id}),100)" title="Dossier"><i class="ti ti-folder-open"></i></button>
+        <button class="btn-icon" onclick="Modal.bewerkMedewerker(${mw.id})" title="Bewerken"><i class="ti ti-edit"></i></button>
+        <button class="btn-icon" onclick="App.navigate('handtekening');setTimeout(()=>document.getElementById('sig-mw-select').value=${mw.id},100);setTimeout(()=>loadSigStatus(${mw.id}),150)" title="Handtekening"><i class="ti ti-signature"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterMw(q) {
+  const mws = DB.getMedewerkers().filter(m=>mwNaam(m).toLowerCase().includes(q.toLowerCase()));
+  document.getElementById('mw-tbody').innerHTML = renderMwTbody(mws);
+}
+function filterMwCat(cat) {
+  const mws = DB.getMedewerkers().filter(m=>!cat||m.cat===cat);
+  document.getElementById('mw-tbody').innerHTML = renderMwTbody(mws);
+}
+
+function loadDossier(id) {
+  if (!id) return;
+  const sel = document.getElementById('dossier-select');
+  if (sel) sel.value = id;
+  const mw = DB.getMedewerker(id);
+  if (!mw) return;
+  const cont = document.getElementById('dossier-content');
+  const certs = DB.getCertificaten(id);
+  const ht = DB.getHandtekening(id);
+  const bijl = DB.getBijlagen(id);
+  const pct = DB.dossierCompletie(id);
+  const il = DB.getInlener(mw.inlenerId);
+
+  const faseHtml = mw.cat==='Uitzend' ? `
+    <div class="divider"></div>
+    <div class="form-label">Contractfase (ABU/NBBU CAO)</div>
+    <div class="fase-timeline">${[{l:'Fase 1-2',s:'Inleen ≤52w'},{l:'Fase 3',s:'Bepaald'},{l:'Fase 4',s:'Onbep.'}].map((f,i)=>{
+      const ai=mw.fase<=2?0:mw.fase===3?1:2;
+      return `<div class="fase-step"><div class="fase-circle ${i<ai?'done':i===ai?'active':''}">${i<ai?'<i class="ti ti-check" style="font-size:10px;"></i>':i+1}</div><div class="fase-label">${f.l}<br><span style="font-size:9px;">${f.s}</span></div></div>`;
+    }).join('')}</div>
+    <div class="alert alert-info mt2" style="font-size:12px;"><i class="ti ti-info-circle"></i>Week ${wekenGewerkt(mw.start)} van 52 — ${52-wekenGewerkt(mw.start)} weken resterend in fase ${mw.fase<=2?'1/2':'—'}</div>` : '';
+
+  const sigHtml = ht ? `<div class="flex gap3">
+    <div><div class="form-label">Handtekening</div><div class="sig-preview" style="width:160px;height:50px;"><img src="${ht.hand}" style="max-height:46px;"></div></div>
+    <div><div class="form-label">Paraaf</div><div class="sig-preview" style="width:80px;height:50px;"><img src="${ht.paraaf||ht.hand}" style="max-height:46px;"></div></div>
+  </div>` : `<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>Geen handtekening — <button class="btn btn-sm mla" onclick="App.navigate('handtekening');setTimeout(()=>{document.getElementById('sig-mw-select').value=${id};loadSigStatus(${id});},100)">Nu instellen</button></div>`;
+
+  const bijlagenHtml = BIJLAGEN.map((naam,i)=>{
+    const b = bijl[i+1]||{};
+    return `<div class="cl-item">
+      <div class="cl-check ${b.compleet?'on':''}" onclick="toggleBijlage(${id},${i+1},this)">
+        ${b.compleet?'<i class="ti ti-check"></i>':''}
+      </div>
+      <span style="flex:1;font-size:13px;">${i+1}. ${naam}</span>
+      ${b.compleet?`<span class="tag tag-green" style="font-size:10px;">${formatDate(b.datum)}</span>`:'<span class="tag tag-amber" style="font-size:10px;">Ontbreekt</span>'}
+    </div>`;
+  }).join('');
+
+  cont.innerHTML = `
+    <div class="flex gap2" style="margin-bottom:14px;">
+      <button class="btn" onclick="Print.dossierById(${id})"><i class="ti ti-printer"></i>Print dossier</button>
+      <button class="btn btn-success" onclick="Print.dossierPDFById(${id})"><i class="ti ti-file-type-pdf"></i>PDF export</button>
+      <button class="btn btn-primary mla" onclick="Modal.nieuwCertificaat(${id})"><i class="ti ti-plus"></i>Certificaat toevoegen</button>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-user"></i>${H(mwNaam(mw))} — Personeelsdossier</div>
+      <div class="form-grid">
+        <div><div class="form-label">Naam</div><div style="font-size:13px;">${H(mwNaam(mw))}</div></div>
+        <div><div class="form-label">BSN</div><div style="font-size:13px;">${H(mw.bsn||'—')}</div></div>
+        <div><div class="form-label">Categorie</div>${faseTag(mw)}</div>
+        <div><div class="form-label">Startdatum</div><div style="font-size:13px;">${formatDate(mw.start)}</div></div>
+        <div><div class="form-label">Opdrachtgever</div><div style="font-size:13px;">${H(il?.naam||'—')}</div></div>
+        <div><div class="form-label">Dossiercompletie</div>${pbarHtml(pct)}</div>
+        <div><div class="form-label">E-mail</div><div style="font-size:13px;">${H(mw.email||'—')}</div></div>
+        <div><div class="form-label">Telefoon</div><div style="font-size:13px;">${H(mw.telefoon||'—')}</div></div>
+      </div>
+      ${faseHtml}
+    </div>
+    <div class="card"><div class="card-title"><i class="ti ti-signature"></i>Handtekening & Paraaf</div>${sigHtml}</div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-certificate"></i>Certificaten (${certs.length})</div>
+      ${certs.length ? certs.map(c=>`<div class="cert-card">
+        <div class="cert-icon" style="background:${daysDiff(c.geldigTot)<=30?'var(--red-bg)':'var(--green-bg)'};color:${daysDiff(c.geldigTot)<=30?'var(--red)':'var(--green)'};">
+          <i class="ti ti-certificate"></i></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${H(c.naam)}</div>
+          <div style="font-size:11px;color:var(--text2);">Nr: ${H(c.nummer||'—')} · Geldig t/m: ${formatDate(c.geldigTot)}</div></div>
+        ${certStatusTag(c)}
+        <button class="btn btn-sm btn-danger" onclick="if(confirm('Verwijderen?'))deleteCert(${c.id})"><i class="ti ti-trash"></i></button>
+      </div>`).join('') : `<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>Geen certificaten geregistreerd. <button class="btn btn-sm btn-primary" onclick="Modal.nieuwCertificaat(${id})" style="margin-left:8px;"><i class="ti ti-plus"></i>Toevoegen</button></div>`}
+    </div>
+    <div class="card"><div class="card-title"><i class="ti ti-files"></i>VCU Bijlagen (16)</div>${bijlagenHtml}</div>`;
+}
+
+function toggleBijlage(mwId, nr, el) {
+  const b = DB.getBijlage(mwId, nr);
+  const nieuw = !b.compleet;
+  DB.saveBijlage(mwId, nr, { compleet: nieuw });
+  el.classList.toggle('on', nieuw);
+  el.innerHTML = nieuw ? '<i class="ti ti-check"></i>' : '';
+  const statusEl = el.parentElement.querySelector('.tag');
+  if (statusEl) {
+    statusEl.className = `tag ${nieuw?'tag-green':'tag-amber'}`;
+    statusEl.style.fontSize = '10px';
+    statusEl.textContent = nieuw ? formatDate(new Date().toISOString().split('T')[0]) : 'Ontbreekt';
+  }
+  App.updateBadges();
+}
+
+function deleteCert(id) { DB.deleteCertificaat(id); App.navigate('dossier'); }
+function sluitIncident(id) {
+  const inc = DB.getIncidenten().find(i=>i.id==id);
+  if (inc) { inc.status='Afgehandeld'; DB.saveIncident(inc); App.navigate('incidenten'); Toast.show('Incident afgehandeld','success'); }
+}
+
+function renderBijlagenPlaceholder() {
+  return BIJLAGEN.map((naam,i)=>`<div class="bijlage-card"><div class="bijlage-num">${i+1}</div><div style="font-size:12px;">${naam}</div></div>`).join('');
+}
+
+function renderBijlagenGrid(mwId) {
+  if (!mwId) return;
+  const bijl = DB.getBijlagen(mwId);
+  document.getElementById('bijlage-grid').innerHTML = BIJLAGEN.map((naam,i)=>{
+    const b = bijl[i+1]||{};
+    return `<div class="bijlage-card ${b.compleet?'done':''}" onclick="openBijlageFormulier(${mwId},${i+1})">
+      <div class="bijlage-num">${i+1}</div>
+      <div style="flex:1;font-size:12px;line-height:1.4;">${naam}</div>
+      <div style="flex-shrink:0;">
+        ${b.compleet
+          ? '<i class="ti ti-circle-check" style="color:var(--green);font-size:18px;"></i>'
+          : '<i class="ti ti-circle-plus" style="color:var(--text3);font-size:18px;"></i>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCertDetail(mwId) {
+  if (!mwId) return;
+  const mw = DB.getMedewerker(mwId);
+  const certs = DB.getCertificaten(mwId);
+  document.getElementById('cert-detail').innerHTML = `
+    <div class="card">
+      <div class="card-title"><i class="ti ti-certificate"></i>${H(mwNaam(mw))} — certificaten</div>
+      ${certs.map(c=>`<div class="cert-card">
+        <div class="cert-icon" style="background:${daysDiff(c.geldigTot)<=30?'var(--red-bg)':'var(--green-bg)'};color:${daysDiff(c.geldigTot)<=30?'var(--red)':'var(--green)'};">
+          <i class="ti ti-certificate"></i></div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${H(c.naam)}</div>
+          <div style="font-size:11px;color:var(--text2);">Nr: ${H(c.nummer||'—')} · Geldig t/m: ${formatDate(c.geldigTot)}</div></div>
+        ${certStatusTag(c)}
+        <button class="btn btn-sm btn-danger" onclick="if(confirm('Verwijderen?'))deleteCert(${c.id});renderCertDetail(${mwId})"><i class="ti ti-trash"></i></button>
+      </div>`).join('') || `<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>Geen certificaten. <button class="btn btn-sm btn-primary" onclick="Modal.nieuwCertificaat(${mwId})" style="margin-left:8px;"><i class="ti ti-plus"></i>Toevoegen</button></div>`}
+    </div>`;
+}
+
+function showHbSection(key, el) {
+  document.querySelectorAll('.hb-toc-item').forEach(e=>e.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const cont = document.getElementById('hb-content');
+  if (key==='intro') {
+    cont.innerHTML = `<div class="card-title"><i class="ti ti-book"></i>Inleiding</div>
+      <p style="font-size:13px;line-height:1.8;color:var(--text2);">Solid Workforce B.V. is een uitzendorganisatie die zich richt op de veilige en gezonde inzet van flexkrachten binnen risicovolle sectoren. Om te voldoen aan de eisen van de <strong>Veiligheids Checklist Uitzendorganisaties (VCU)</strong> en om de veiligheid, gezondheid en welzijn van onze uitzendkrachten te waarborgen, heeft Solid Workforce B.V. dit VCU-handboek opgesteld.</p>
+      <button class="btn btn-primary mt3" onclick="Print.handboek()"><i class="ti ti-printer"></i>Print volledig handboek</button>`;
+  } else if (key==='bijlagen') {
+    cont.innerHTML = `<div class="card-title"><i class="ti ti-files"></i>Bijlagen 1–16</div>
+      <div class="bijlage-grid">${BIJLAGEN.map((b,i)=>`<div class="bijlage-card"><div class="bijlage-num">${i+1}</div><div style="font-size:12px;">${b}</div></div>`).join('')}</div>`;
+  } else {
+    const nr = parseInt(key.replace('p',''));
+    const p = PROCEDURES.find(x=>x.nr===nr);
+    if (p) cont.innerHTML = `
+      <div class="card-title"><i class="ti ti-file-text"></i>${p.nr}. ${p.titel}</div>
+      <table style="font-size:13px;margin-bottom:14px;"><tr><td style="color:var(--text2);padding:4px 8px 4px 0;width:140px;">Frequentie</td><td>${p.freq}</td></tr><tr><td style="color:var(--text2);padding:4px 8px 4px 0;">Verantwoordelijke</td><td>${p.verantw}</td></tr></table>
+      <p style="font-size:13px;line-height:1.8;color:var(--text2);">${p.tekst}</p>
+      <button class="btn btn-primary mt3" onclick="Print.handboekHoofdstuk(${p.nr})"><i class="ti ti-printer"></i>Print dit hoofdstuk</button>`;
+  }
+}
+
+function loadSigStatus(mwId) {
+  if (!mwId) return;
+  const mw = DB.getMedewerker(mwId);
+  const ht = DB.getHandtekening(mwId);
+  const bar = document.getElementById('sig-status');
+  if (bar) bar.innerHTML = ht ? `<div class="alert alert-success"><i class="ti ti-check"></i>${H(mwNaam(mw))} heeft al een handtekening opgeslagen. U kunt deze hieronder overschrijven.</div>` : `<div class="alert alert-warn"><i class="ti ti-alert-triangle"></i>${H(mwNaam(mw))} heeft nog geen handtekening.</div>`;
+  if (ht?.hand) { document.getElementById('hand-preview').classList.remove('hidden'); document.getElementById('hand-img').src = ht.hand; }
+  if (ht?.paraaf) { document.getElementById('para-preview').classList.remove('hidden'); document.getElementById('para-img').src = ht.paraaf; }
+  initCanvasses();
+}
+
+let sigMwId = 0;
+function initCanvasses() {
+  ['sig-canvas','para-canvas'].forEach(id => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    c.width = c.parentElement.offsetWidth || 480;
+    ctx.fillStyle = '#fafaf8'; ctx.fillRect(0,0,c.width,c.height);
+    let drawing = false;
+    const pos = e => { const r=c.getBoundingClientRect(); return e.touches ? {x:(e.touches[0].clientX-r.left)*(c.width/r.width),y:(e.touches[0].clientY-r.top)*(c.height/r.height)} : {x:(e.clientX-r.left)*(c.width/r.width),y:(e.clientY-r.top)*(c.height/r.height)}; };
+    c.onmousedown = e => { drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); };
+    c.onmousemove = e => { if(!drawing)return; const p=pos(e); const col=id==='sig-canvas'?(document.getElementById('sig-color')?.value||'#111'):(document.getElementById('para-color')?.value||'#111'); ctx.strokeStyle=col; ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineTo(p.x,p.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.x,p.y); };
+    c.onmouseup = c.onmouseleave = () => drawing=false;
+    c.ontouchstart = e => { e.preventDefault(); drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); };
+    c.ontouchmove = e => { e.preventDefault(); if(!drawing)return; const p=pos(e); ctx.strokeStyle='#111'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineTo(p.x,p.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.x,p.y); };
+    c.ontouchend = () => drawing=false;
+  });
+}
+
+function clearCanvas(id) { const c=document.getElementById(id); if(!c)return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.fillStyle='#fafaf8'; ctx.fillRect(0,0,c.width,c.height); }
+
+function saveFromCanvas(type) {
+  const mwId = parseInt(document.getElementById('sig-mw-select')?.value||0);
+  if (!mwId) { Toast.show('Selecteer eerst een medewerker','warn'); return; }
+  const c = document.getElementById(type==='hand'?'sig-canvas':'para-canvas');
+  const data = c.toDataURL('image/png');
+  const ht = DB.getHandtekening(mwId) || {};
+  if (type==='hand') { DB.saveHandtekening(mwId, data, ht.paraaf||null); document.getElementById('hand-img').src=data; document.getElementById('hand-preview').classList.remove('hidden'); }
+  else { DB.saveHandtekening(mwId, ht.hand||data, data); document.getElementById('para-img').src=data; document.getElementById('para-preview').classList.remove('hidden'); }
+  Toast.show('Opgeslagen — automatisch in alle formulieren','success');
+  App.updateBadges();
+}
+
+function handleSigUpload(type, e) {
+  const mwId = parseInt(document.getElementById('sig-mw-select')?.value||0);
+  if (!mwId) { Toast.show('Selecteer eerst een medewerker','warn'); return; }
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const data = ev.target.result;
+    const ht = DB.getHandtekening(mwId) || {};
+    if (type==='hand') { DB.saveHandtekening(mwId, data, ht.paraaf||null); document.getElementById('hand-img').src=data; document.getElementById('hand-preview').classList.remove('hidden'); document.getElementById('hand-upload-zone').classList.add('has-file'); document.getElementById('hand-upload-zone').innerHTML=`<i class="ti ti-check"></i><div>${file.name} geüpload</div>`; }
+    else { DB.saveHandtekening(mwId, ht.hand||data, data); document.getElementById('para-img').src=data; document.getElementById('para-preview').classList.remove('hidden'); document.getElementById('para-upload-zone').classList.add('has-file'); document.getElementById('para-upload-zone').innerHTML=`<i class="ti ti-check"></i><div>${file.name} geüpload</div>`; }
+    Toast.show('Opgeslagen — automatisch in alle formulieren','success');
+    App.updateBadges();
+  };
+  reader.readAsDataURL(file);
+}
+
+function switchTab(type, tab) {
+  document.getElementById(`${type}-teken`).classList.toggle('hidden', tab!=='teken');
+  document.getElementById(`${type}-upload`).classList.toggle('hidden', tab!=='upload');
+}
+
+function saveInstelling(key, val) { const inst=DB.getInstellingen(); inst[key]=val; DB.saveInstellingen(inst); }
+
+function slaInstellingenOp() {
+  const inst = DB.getInstellingen();
+  inst.bedrijfsnaam = document.getElementById('inst-bnaam')?.value || inst.bedrijfsnaam;
+  inst.kvk = document.getElementById('inst-kvk')?.value || inst.kvk;
+  inst.adres = document.getElementById('inst-adres')?.value || inst.adres;
+  inst.vgmFunctionaris = document.getElementById('inst-vgm')?.value || inst.vgmFunctionaris;
+  inst.vgmEmail = document.getElementById('inst-email')?.value || inst.vgmEmail;
+  inst.sigDagen = parseInt(document.getElementById('inst-sigdagen')?.value || 30);
+  inst.whatsappNr = document.getElementById('inst-wa')?.value || inst.whatsappNr;
+  inst.sigSysteem = document.getElementById('inst-sys')?.checked ?? inst.sigSysteem;
+  inst.sigEmail = document.getElementById('inst-mail')?.checked ?? inst.sigEmail;
+  inst.sigWhatsapp = document.getElementById('inst-wa-cb')?.checked ?? inst.sigWhatsapp;
+  DB.saveInstellingen(inst);
+  Toast.show('Instellingen opgeslagen','success');
+}
+
+const Export = {
+  csv() {
+    const mws = DB.getMedewerkers();
+    const rows = [['Naam','Categorie','Fase','Start','Opdrachtgever','Handtekening','Dossier%','VCA Status']];
+    mws.forEach(mw => {
+      const il = DB.getInlener(mw.inlenerId);
+      rows.push([mwNaam(mw),mw.cat,mw.fase||'—',mw.start,il?.naam||'—',mw.heeftHandtekening?'Ja':'Nee',DB.dossierCompletie(mw.id),DB.getCertificaten(mw.id).length>0?'Ja':'Nee']);
+    });
+    const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`VCU_Compliance_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+    Toast.show('CSV geëxporteerd','success');
+  }
+};
+
+</script>
+<script>
+// ── ALLE MODALS ──
+const Modal = {
+  open(html) {
+    document.getElementById('modal-box').innerHTML = html;
+    document.getElementById('modal-overlay').classList.add('open');
+  },
+  close() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  },
+  handleOverlay(e) {
+    if (e.target === document.getElementById('modal-overlay')) this.close();
+  },
+  hdr(title) {
+    return `<div class="modal-hdr"><div class="modal-title">${title}</div><button class="modal-close" onclick="Modal.close()"><i class="ti ti-x"></i></button></div>`;
+  },
+  footer(saveCall, saveLabel='Opslaan') {
+    return `<div class="flex gap2 mt3" style="justify-content:flex-end;"><button class="btn" onclick="Modal.close()">Annuleren</button><button class="btn btn-primary" onclick="${saveCall}"><i class="ti ti-check"></i>${saveLabel}</button></div>`;
+  },
+
+  // ── NIEUWE MEDEWERKER ──
+  nieuwMedewerker(id=null) {
+    const mw = id ? DB.getMedewerker(id) : null;
+    const ils = DB.getInleners();
+    const ilOpts = ils.map(i=>`<option value="${i.id}" ${mw?.inlenerId==i.id?'selected':''}>${H(i.naam)}</option>`).join('');
+    const v = mw || {};
+    this.open(`${this.hdr(id ? 'Medewerker bewerken' : 'Nieuwe medewerker toevoegen')}
+    <div class="form-grid">
+      <div class="form-group"><div class="form-label">Voornaam *</div><input class="form-input" id="mw-vnaam" value="${H(v.voornaam||'')}"></div>
+      <div class="form-group"><div class="form-label">Achternaam *</div><input class="form-input" id="mw-anaam" value="${H(v.achternaam||'')}"></div>
+      <div class="form-group"><div class="form-label">Categorie *</div>
+        <select class="form-input" id="mw-cat" onchange="toggleFaseVeld()">
+          ${['Eigen','Uitzend','ZZP','Onderaannemer'].map(c=>`<option ${v.cat===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" id="fase-veld" ${v.cat!=='Uitzend'&&v.cat?'style="display:none"':''}>
+        <div class="form-label">Contractfase</div>
+        <select class="form-input" id="mw-fase">
+          <option value="1" ${v.fase==1?'selected':''}>Fase 1 — Inleen (eerste periode)</option>
+          <option value="2" ${v.fase==2?'selected':''}>Fase 2 — Inleen (max. 52 weken)</option>
+          <option value="3" ${v.fase==3?'selected':''}>Fase 3 — Bepaalde tijd (≥1 jaar)</option>
+          <option value="4" ${v.fase==4?'selected':''}>Fase 4 — Onbepaalde tijd (vast)</option>
+        </select>
+      </div>
+      <div class="form-group"><div class="form-label">Startdatum *</div><input type="date" class="form-input" id="mw-start" value="${v.start||''}"></div>
+      <div class="form-group"><div class="form-label">Opdrachtgever</div>
+        <select class="form-input" id="mw-inlener"><option value="">— Geen —</option>${ilOpts}</select>
+      </div>
+      <div class="form-group full"><div class="form-label">Functie</div><input class="form-input" id="mw-functie" value="${H(v.functie||'')}"></div>
+      <div class="form-group"><div class="form-label">E-mailadres</div><input type="email" class="form-input" id="mw-email" value="${H(v.email||'')}"></div>
+      <div class="form-group"><div class="form-label">Telefoonnummer</div><input class="form-input" id="mw-tel" value="${H(v.telefoon||'')}"></div>
+      <div class="form-group"><div class="form-label">BSN (geanonimiseerd)</div><input class="form-input" id="mw-bsn" value="${H(v.bsn||'')}"></div>
+      <div class="form-group"><div class="form-label">ID gecontroleerd</div>
+        <select class="form-input" id="mw-id"><option value="1" ${v.idGecontroleerd?'selected':''}>Ja — gecontroleerd</option><option value="0" ${!v.idGecontroleerd?'selected':''}>Nee</option></select>
+      </div>
+    </div>
+    <div class="alert alert-info mt2"><i class="ti ti-signature"></i>Na opslaan kunt u direct de handtekening instellen.</div>
+    ${this.footer(`saveMedewerker(${id||'null'})`, id?'Opslaan':'Toevoegen & dossier aanmaken')}`);
+    toggleFaseVeld();
+  },
+
+  bewerkMedewerker(id) { this.nieuwMedewerker(id); },
+
+  // ── NIEUW CERTIFICAAT ──
+  nieuwCertificaat(mwId=null) {
+    const mws = DB.getMedewerkers();
+    const mwOpts = mws.map(m=>`<option value="${m.id}" ${mwId==m.id?'selected':''}>${H(mwNaam(m))}</option>`).join('');
+    this.open(`${this.hdr('Certificaat / Diploma toevoegen')}
+    <div class="form-grid">
+      <div class="form-group full"><div class="form-label">Medewerker *</div><select class="form-input" id="cert-mw">${mwOpts}</select></div>
+      <div class="form-group"><div class="form-label">Type certificaat *</div>
+        <select class="form-input" id="cert-naam">${CERT_TYPEN.map(t=>`<option>${t}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><div class="form-label">Certificaatnummer</div><input class="form-input" id="cert-nr" placeholder="VCA-2025-001"></div>
+      <div class="form-group"><div class="form-label">Geldig vanaf</div><input type="date" class="form-input" id="cert-van"></div>
+      <div class="form-group"><div class="form-label">Geldig tot *</div><input type="date" class="form-input" id="cert-tot"></div>
+    </div>
+    <div class="mt2">
+      <div class="form-label">Upload diploma / certificaat (PDF of afbeelding)</div>
+      <div class="upload-zone mt1" id="cert-zone" onclick="document.getElementById('cert-file').click()">
+        <i class="ti ti-upload"></i><div style="font-size:13px;">Klik of sleep PDF / PNG / JPG hier</div>
+      </div>
+      <input type="file" id="cert-file" accept=".pdf,image/*" class="hidden" onchange="handleCertUpload(event)">
+    </div>
+    <div class="alert alert-info mt2"><i class="ti ti-bell"></i>Signalering wordt automatisch ingesteld ${DB.getInstellingen().sigDagen} dagen voor vervaldatum.</div>
+    ${this.footer('saveCertificaatModal()')}`);
+  },
+
+  // ── INCIDENT BEKIJKEN ──
+  bekijkIncident(id) {
+    const inc = DB.getIncidenten().find(i=>i.id==id);
+    const mw = DB.getMedewerker(inc?.mwId);
+    this.open(`${this.hdr('Incident details')}
+    <table style="font-size:13px;width:100%;">
+      <tr><td style="color:var(--text2);padding:6px 0;width:140px;">Datum/Tijdstip</td><td>${formatDate(inc.datum)} ${inc.tijdstip||''}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Type</td><td>${H(inc.type)}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Medewerker</td><td>${H(mwNaam(mw))}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Locatie</td><td>${H(inc.locatie||'—')}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Beschrijving</td><td>${H(inc.beschrijving||'—')}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Letsel</td><td>${inc.letsel?'<span class="tag tag-red">Ja</span>':'<span class="tag tag-green">Nee</span>'}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Schade</td><td>${inc.schade?'<span class="tag tag-red">Ja</span>':'<span class="tag tag-green">Nee</span>'}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Status</td><td><span class="tag ${inc.status==='Open'?'tag-amber':'tag-green'}">${inc.status}</span></td></tr>
+    </table>
+    <div class="flex gap2 mt3" style="justify-content:flex-end;">
+      ${inc.status==='Open'?`<button class="btn btn-success" onclick="sluitIncident(${id});Modal.close()"><i class="ti ti-check"></i>Afhandelen</button>`:''}
+      <button class="btn" onclick="Modal.close()">Sluiten</button>
+    </div>`);
+  },
+
+  // ── NIEUW INCIDENT ──
+  nieuwIncident() {
+    const mws = DB.getMedewerkers();
+    const ils = DB.getInleners();
+    this.open(`${this.hdr('Incident / Bijna-Ongeval melden (Bijlage 14)')}
+    <div class="form-grid">
+      <div class="form-group"><div class="form-label">Datum *</div><input type="date" class="form-input" id="inc-datum" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="form-group"><div class="form-label">Tijdstip</div><input type="time" class="form-input" id="inc-tijd"></div>
+      <div class="form-group"><div class="form-label">Type *</div>
+        <select class="form-input" id="inc-type"><option>Bijna-ongeval</option><option>Incident</option><option>Bedrijfsongeval</option></select>
+      </div>
+      <div class="form-group"><div class="form-label">Medewerker</div>
+        <select class="form-input" id="inc-mw">${mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('')}</select>
+      </div>
+      <div class="form-group full"><div class="form-label">Locatie</div><input class="form-input" id="inc-loc" placeholder="Werklocatie / adres"></div>
+      <div class="form-group full"><div class="form-label">Beschrijving *</div><textarea class="form-input" id="inc-omschr" rows="3" placeholder="Omschrijf het incident..."></textarea></div>
+      <div class="form-group"><div class="form-label">Lichamelijk letsel?</div><select class="form-input" id="inc-letsel"><option value="0">Nee</option><option value="1">Ja</option></select></div>
+      <div class="form-group"><div class="form-label">Materiële schade?</div><select class="form-input" id="inc-schade"><option value="0">Nee</option><option value="1">Ja</option></select></div>
+    </div>
+    ${this.footer('saveIncidentModal()')}`);
+  },
+
+  // ── NIEUWE EVALUATIE ──
+  nieuweEvaluatie() {
+    const mws = DB.getMedewerkers();
+    const ils = DB.getInleners();
+    const sterField = (id, label) => `<div class="form-group"><div class="form-label">${label}</div><select class="form-input" id="${id}"><option value="1">⭐ 1</option><option value="2">⭐⭐ 2</option><option value="3">⭐⭐⭐ 3</option><option value="4" selected>⭐⭐⭐⭐ 4</option><option value="5">⭐⭐⭐⭐⭐ 5</option></select></div>`;
+    this.open(`${this.hdr('Nieuwe evaluatie (Bijlage 13)')}
+    <div class="form-grid">
+      <div class="form-group"><div class="form-label">Medewerker *</div><select class="form-input" id="ev-mw">${mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('')}</select></div>
+      <div class="form-group"><div class="form-label">Inlener *</div><select class="form-input" id="ev-il">${ils.map(i=>`<option value="${i.id}">${H(i.naam)}</option>`).join('')}</select></div>
+      <div class="form-group full"><div class="form-label">Datum</div><input type="date" class="form-input" id="ev-datum" value="${new Date().toISOString().split('T')[0]}"></div>
+      ${sterField('ev-veilig','Veiligheidsregels')}${sterField('ev-pbm','PBM gebruik')}
+      ${sterField('ev-kwal','Kwaliteit werk')}${sterField('ev-werk','Werkhouding')}
+      <div class="form-group"><div class="form-label">Inlener tevreden?</div><select class="form-input" id="ev-it"><option value="1">Ja — voortzetten</option><option value="0">Nee — verbeterpunten</option></select></div>
+      <div class="form-group"><div class="form-label">Medewerker tevreden?</div><select class="form-input" id="ev-ut"><option value="1">Ja — wil blijven</option><option value="0">Nee — verbeterpunten</option></select></div>
+      <div class="form-group full"><div class="form-label">Verbeterpunten / opmerkingen</div><textarea class="form-input" id="ev-verb" rows="2"></textarea></div>
+    </div>
+    ${this.footer('saveEvaluatieModal()')}`);
+  },
+
+  // ── NIEUWE INLENER ──
+  nieuweInlener() { this.bewerkInlener(null); },
+  bewerkInlener(id) {
+    const il = id ? DB.getInlener(id) : null;
+    const v = il || {};
+    this.open(`${this.hdr(id ? 'Inlener bewerken' : 'Nieuwe inlener toevoegen')}
+    <div class="form-grid">
+      <div class="form-group full"><div class="form-label">Bedrijfsnaam *</div><input class="form-input" id="il-naam" value="${H(v.naam||'')}"></div>
+      <div class="form-group"><div class="form-label">KVK-nummer</div><input class="form-input" id="il-kvk" value="${H(v.kvk||'')}"></div>
+      <div class="form-group"><div class="form-label">Sector</div><input class="form-input" id="il-sector" value="${H(v.sector||'')}"></div>
+      <div class="form-group"><div class="form-label">Contactpersoon</div><input class="form-input" id="il-contact" value="${H(v.contact||'')}"></div>
+      <div class="form-group"><div class="form-label">E-mail</div><input type="email" class="form-input" id="il-email" value="${H(v.email||'')}"></div>
+      <div class="form-group"><div class="form-label">Telefoon</div><input class="form-input" id="il-tel" value="${H(v.telefoon||'')}"></div>
+    </div>
+    ${this.footer(`saveInlenerModal(${id||'null'})`)}`);
+  }
+};
+
+// ── SAVE FUNCTIES ──
+function toggleFaseVeld() {
+  const cat = document.getElementById('mw-cat')?.value;
+  const veld = document.getElementById('fase-veld');
+  if (veld) veld.style.display = cat==='Uitzend' ? '' : 'none';
+}
+
+function saveMedewerker(id) {
+  const vnaam = document.getElementById('mw-vnaam')?.value?.trim();
+  const anaam = document.getElementById('mw-anaam')?.value?.trim();
+  if (!vnaam||!anaam) { Toast.show('Vul naam in','warn'); return; }
+  const cat = document.getElementById('mw-cat')?.value;
+  const fase = cat==='Uitzend' ? parseInt(document.getElementById('mw-fase')?.value||1) : null;
+  const mw = {
+    id: id||0, voornaam:vnaam, achternaam:anaam, cat,fase,
+    start: document.getElementById('mw-start')?.value||new Date().toISOString().split('T')[0],
+    inlenerId: parseInt(document.getElementById('mw-inlener')?.value||0)||null,
+    functie: document.getElementById('mw-functie')?.value||'',
+    email: document.getElementById('mw-email')?.value||'',
+    telefoon: document.getElementById('mw-tel')?.value||'',
+    bsn: document.getElementById('mw-bsn')?.value||'',
+    idGecontroleerd: document.getElementById('mw-id')?.value==='1',
+    vcuVoorlichting:false, heeftHandtekening:false, actief:true
+  };
+  if (id) { const bestaand=DB.getMedewerker(id); mw.heeftHandtekening=bestaand?.heeftHandtekening||false; mw.vcuVoorlichting=bestaand?.vcuVoorlichting||false; }
+  DB.saveMedewerker(mw);
+  Modal.close();
+  Toast.show(id?'Medewerker bijgewerkt':'Medewerker aangemaakt — dossier gereed','success');
+  App.navigate('medewerkers');
+  App.updateBadges();
+}
+
+function handleCertUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const zone = document.getElementById('cert-zone');
+  zone.classList.add('has-file');
+  zone.innerHTML = `<i class="ti ti-check"></i><div>${H(file.name)}</div>`;
+  const reader = new FileReader();
+  reader.onload = ev => { window._certBestand = {naam:file.name, data:ev.target.result}; };
+  reader.readAsDataURL(file);
+}
+
+function saveCertificaatModal() {
+  const mwId = parseInt(document.getElementById('cert-mw')?.value||0);
+  const naam = document.getElementById('cert-naam')?.value;
+  const tot = document.getElementById('cert-tot')?.value;
+  if (!mwId||!naam||!tot) { Toast.show('Vul alle verplichte velden in','warn'); return; }
+  DB.saveCertificaat({id:0, mwId, naam, nummer:document.getElementById('cert-nr')?.value||'', geldigVanaf:document.getElementById('cert-van')?.value||'', geldigTot:tot, bestand:window._certBestand||null, sigVerzonden:false});
+  window._certBestand = null;
+  Modal.close();
+  Toast.show('Certificaat opgeslagen — signalering ingesteld','success');
+  Signalering.checkAll();
+  App.navigate('certificaten');
+  App.updateBadges();
+}
+
+function saveIncidentModal() {
+  const beschrijving = document.getElementById('inc-omschr')?.value?.trim();
+  if (!beschrijving) { Toast.show('Vul een beschrijving in','warn'); return; }
+  DB.saveIncident({id:0, mwId:parseInt(document.getElementById('inc-mw')?.value||0), datum:document.getElementById('inc-datum')?.value, tijdstip:document.getElementById('inc-tijd')?.value, type:document.getElementById('inc-type')?.value, locatie:document.getElementById('inc-loc')?.value, beschrijving, letsel:document.getElementById('inc-letsel')?.value==='1', schade:document.getElementById('inc-schade')?.value==='1', status:'Open', melder:'VGM-functionaris'});
+  Modal.close();
+  Toast.show('Incident geregistreerd','success');
+  App.navigate('incidenten');
+}
+
+function saveEvaluatieModal() {
+  DB.saveEvaluatie({id:0, mwId:parseInt(document.getElementById('ev-mw')?.value||0), inlenerId:parseInt(document.getElementById('ev-il')?.value||0), datum:document.getElementById('ev-datum')?.value, scoreVeiligheid:parseInt(document.getElementById('ev-veilig')?.value), scorePBM:parseInt(document.getElementById('ev-pbm')?.value), scoreKwaliteit:parseInt(document.getElementById('ev-kwal')?.value), scoreWerkhouding:parseInt(document.getElementById('ev-werk')?.value), inlenerTevreden:document.getElementById('ev-it')?.value==='1', ukTevreden:document.getElementById('ev-ut')?.value==='1', verbeterpunten:document.getElementById('ev-verb')?.value});
+  Modal.close();
+  Toast.show('Evaluatie opgeslagen','success');
+  App.navigate('evaluaties');
+}
+
+function saveInlenerModal(id) {
+  const naam = document.getElementById('il-naam')?.value?.trim();
+  if (!naam) { Toast.show('Vul bedrijfsnaam in','warn'); return; }
+  DB.saveInlener({id:id||0, naam, kvk:document.getElementById('il-kvk')?.value, sector:document.getElementById('il-sector')?.value, contact:document.getElementById('il-contact')?.value, email:document.getElementById('il-email')?.value, telefoon:document.getElementById('il-tel')?.value, actief:true});
+  Modal.close();
+  Toast.show('Inlener opgeslagen','success');
+  App.navigate('inleners');
+}
+
+</script>
+<script>
+// ── AFDRUKKEN & PDF ──
+const Print = {
+
+  _printHtml(html, titel) {
+    const w = window.open('', '_blank', 'width=900,height=700');
+    w.document.write(`<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
+    <title>${titel}</title>
+    <style>
+      body { font-family: Arial, sans-serif; font-size: 12px; color: #111; margin: 20px; }
+      h1 { font-size: 18px; margin-bottom: 4px; }
+      h2 { font-size: 15px; margin: 16px 0 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+      h3 { font-size: 13px; margin: 12px 0 6px; }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
+      th { background: #f0f0f0; padding: 6px 8px; text-align: left; border: 1px solid #ccc; }
+      td { padding: 6px 8px; border: 1px solid #ddd; }
+      .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #185FA5; padding-bottom: 10px; margin-bottom: 16px; }
+      .bedrijf { font-size: 11px; color: #555; }
+      .tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; }
+      .t-green { background: #EAF3DE; color: #27500A; }
+      .t-amber { background: #FAEEDA; color: #854F0B; }
+      .t-red { background: #FCEBEB; color: #791F1F; }
+      .t-blue { background: #E6F1FB; color: #0C447C; }
+      .sig-box { border: 1px solid #ccc; height: 50px; width: 160px; display: inline-block; }
+      .checkmark { font-size: 14px; }
+      .footer { margin-top: 30px; border-top: 1px solid #ccc; padding-top: 8px; font-size: 10px; color: #888; }
+      @media print { button { display: none; } }
+    </style></head><body>
+    <div class="header">
+      <div>
+        <h1>${titel}</h1>
+        <div class="bedrijf">Solid Workforce B.V. · KVK 93619405 · Rivium 2E Straat, 2909 LG Capelle aan den IJssel</div>
+        <div class="bedrijf">Datum: ${formatDate(new Date().toISOString())}</div>
+      </div>
+    </div>
+    ${html}
+    <div class="footer">VCU Managementsysteem — Solid Workforce B.V. · Gegenereerd op ${new Date().toLocaleString('nl-NL')}</div>
+    <br><button onclick="window.print()" style="padding:8px 16px;background:#185FA5;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;">Afdrukken / Opslaan als PDF</button>
+    </body></html>`);
+    w.document.close();
+    setTimeout(() => w.print(), 500);
+  },
+
+  handboek() {
+    const inst = DB.getInstellingen();
+    const procs = PROCEDURES.map(p=>`
+      <h3>${p.nr}. ${p.titel}</h3>
+      <table><tr><th style="width:160px;">Frequentie</th><td>${p.freq}</td></tr>
+      <tr><th>Verantwoordelijke</th><td>${p.verantw}</td></tr>
+      <tr><th>Toelichting</th><td>${p.tekst}</td></tr></table>`).join('');
+    const bijl = BIJLAGEN.map((b,i)=>`<tr><td>${i+1}</td><td>${b}</td><td>☐ Aanwezig</td></tr>`).join('');
+    this._printHtml(`
+      <h2>Inleiding</h2>
+      <p>Solid Workforce B.V. is een uitzendorganisatie die zich richt op de veilige en gezonde inzet van flexkrachten binnen risicovolle sectoren. Dit handboek beschrijft de VGM-processen conform VCU-richtlijnen.</p>
+      <h2>Deel 1 — Procedures (1 t/m 16)</h2>${procs}
+      <h2>Deel 2 — Bijlagen (1 t/m 16)</h2>
+      <table><thead><tr><th>#</th><th>Bijlage</th><th>Status</th></tr></thead><tbody>${bijl}</tbody></table>`,
+      'VCU Handboek — Solid Workforce B.V.'
+    );
+  },
+
+  handboekPDF() { this.handboek(); },
+
+  handboekHoofdstuk(nr) {
+    const p = PROCEDURES.find(x=>x.nr===nr);
+    if (!p) return;
+    this._printHtml(`<h2>${p.nr}. ${p.titel}</h2>
+      <table><tr><th style="width:160px;">Frequentie</th><td>${p.freq}</td></tr>
+      <tr><th>Verantwoordelijke</th><td>${p.verantw}</td></tr>
+      <tr><th>Toelichting</th><td>${p.tekst}</td></tr></table>`,
+      `VCU Handboek — Hoofdstuk ${p.nr}: ${p.titel}`
+    );
+  },
+
+  dossierById(mwId) {
+    if (!mwId) { Toast.show('Selecteer een medewerker','warn'); return; }
+    const mw = DB.getMedewerker(mwId);
+    if (!mw) return;
+    this._printDossier(mw);
+  },
+
+  dossier() {
+    const sel = document.getElementById('dossier-select');
+    if (!sel?.value) { Toast.show('Selecteer een medewerker','warn'); return; }
+    this.dossierById(parseInt(sel.value));
+  },
+
+  dossierPDF() { this.dossier(); },
+  dossierPDFById(id) { this.dossierById(id); },
+
+  _printDossier(mw) {
+    const il = DB.getInlener(mw.inlenerId);
+    const certs = DB.getCertificaten(mw.id);
+    const bijl = DB.getBijlagen(mw.id);
+    const ht = DB.getHandtekening(mw.id);
+    const pct = DB.dossierCompletie(mw.id);
+
+    const faseLabels = {1:'Fase 1 — Inleen (eerste periode)',2:'Fase 2 — Inleen',3:'Fase 3 — Bepaalde tijd',4:'Fase 4 — Onbepaalde tijd (vast)'};
+
+    const bijlagenRows = BIJLAGEN.map((naam,i)=>{
+      const b = bijl[i+1]||{};
+      return `<tr><td>${i+1}</td><td>${naam}</td><td>${b.compleet?`<span class="tag t-green">✓ ${formatDate(b.datum)}</span>`:'<span class="tag t-amber">Ontbreekt</span>'}</td></tr>`;
+    }).join('');
+
+    const certRows = certs.length ? certs.map(c=>`<tr><td>${c.naam}</td><td>${c.nummer||'—'}</td><td>${formatDate(c.geldigTot)}</td><td>${daysDiff(c.geldigTot)<=30?'<span class="tag t-red">Verloopt binnenkort</span>':'<span class="tag t-green">Geldig</span>'}</td></tr>`).join('') : '<tr><td colspan="4">Geen certificaten geregistreerd</td></tr>';
+
+    const sigHtml = ht ? `<img src="${ht.hand}" style="max-height:50px;border:1px solid #ccc;padding:4px;">` : '<div class="sig-box">Niet ingesteld</div>';
+    const parHtml = ht?.paraaf ? `<img src="${ht.paraaf}" style="max-height:50px;border:1px solid #ccc;padding:4px;">` : '<div class="sig-box" style="width:80px;">Niet ingesteld</div>';
+
+    this._printHtml(`
+      <h2>Medewerkersdossier</h2>
+      <table>
+        <tr><th style="width:160px;">Naam</th><td>${mwNaam(mw)}</td><th style="width:120px;">BSN</th><td>${mw.bsn||'—'}</td></tr>
+        <tr><th>Categorie</th><td>${mw.cat}</td><th>Contractfase</th><td>${mw.fase?faseLabels[mw.fase]:'N.v.t.'}</td></tr>
+        <tr><th>Startdatum</th><td>${formatDate(mw.start)}</td><th>Opdrachtgever</th><td>${il?.naam||'—'}</td></tr>
+        <tr><th>Functie</th><td>${mw.functie||'—'}</td><th>Dossiercompletie</th><td>${pct}%</td></tr>
+        <tr><th>E-mail</th><td>${mw.email||'—'}</td><th>Telefoon</th><td>${mw.telefoon||'—'}</td></tr>
+        <tr><th>ID gecontroleerd</th><td>${mw.idGecontroleerd?'<span class="tag t-green">✓ Ja</span>':'<span class="tag t-amber">Nee</span>'}</td>
+            <th>VCU-voorlichting</th><td>${mw.vcuVoorlichting?'<span class="tag t-green">✓ Ja</span>':'<span class="tag t-amber">Nee</span>'}</td></tr>
+      </table>
+
+      ${mw.cat==='Uitzend'?`<h2>Contractfase (ABU/NBBU CAO)</h2>
+      <p>Huidige fase: <strong>${faseLabels[mw.fase]||'—'}</strong> · Startdatum: ${formatDate(mw.start)} · Weken gewerkt: ${wekenGewerkt(mw.start)}</p>`:''}
+
+      <h2>Handtekening & Paraaf</h2>
+      <table><tr><th>Handtekening</th><th>Paraaf</th><th>Datum ingesteld</th></tr>
+      <tr><td>${sigHtml}</td><td>${parHtml}</td><td>${ht?formatDate(ht.datum):'—'}</td></tr></table>
+
+      <h2>Certificaten & Diploma's</h2>
+      <table><thead><tr><th>Certificaat</th><th>Nummer</th><th>Geldig tot</th><th>Status</th></tr></thead>
+      <tbody>${certRows}</tbody></table>
+
+      <h2>VCU Bijlagen (16 stuks)</h2>
+      <table><thead><tr><th style="width:30px;">#</th><th>Bijlage</th><th>Status</th></tr></thead>
+      <tbody>${bijlagenRows}</tbody></table>
+
+      <h2>Handtekeningen</h2>
+      <table><tr>
+        <td style="width:33%;text-align:center;"><div style="margin-bottom:4px;font-size:11px;font-weight:bold;">Medewerker</div>${sigHtml}<div style="font-size:10px;margin-top:4px;">${mwNaam(mw)}</div></td>
+        <td style="width:33%;text-align:center;"><div style="margin-bottom:4px;font-size:11px;font-weight:bold;">Intercedent</div><div class="sig-box"></div></td>
+        <td style="width:33%;text-align:center;"><div style="margin-bottom:4px;font-size:11px;font-weight:bold;">Directie</div><div class="sig-box"></div></td>
+      </tr></table>`,
+      `Personeelsdossier — ${mwNaam(mw)}`
+    );
+  },
+
+  compliance() {
+    const mws = DB.getMedewerkers();
+    const rows = mws.map(mw=>{
+      const pct = DB.dossierCompletie(mw.id);
+      const certs = DB.getCertificaten(mw.id);
+      const il = DB.getInlener(mw.inlenerId);
+      return `<tr>
+        <td>${mwNaam(mw)}</td>
+        <td>${mw.cat}</td>
+        <td>${mw.fase?`Fase ${mw.fase}`:'—'}</td>
+        <td>${il?.naam||'—'}</td>
+        <td>${mw.heeftHandtekening?'<span class="tag t-green">✓</span>':'<span class="tag t-amber">Nee</span>'}</td>
+        <td>${pct===100?`<span class="tag t-green">100%</span>`:`<span class="tag t-amber">${pct}%</span>`}</td>
+        <td>${certs.length>0?certs.map(c=>`${c.naam} (${formatDate(c.geldigTot)})`).join(', '):'Geen'}</td>
+        <td>${pct===100&&mw.heeftHandtekening?'<span class="tag t-green">Compliant</span>':'<span class="tag t-amber">Onvolledig</span>'}</td>
+      </tr>`;
+    }).join('');
+    this._printHtml(`
+      <h2>Compliancerapportage</h2>
+      <table><thead><tr><th>Naam</th><th>Categorie</th><th>Fase</th><th>Inlener</th><th>Handtek.</th><th>Dossier</th><th>Certificaten</th><th>VCU Status</th></tr></thead>
+      <tbody>${rows}</tbody></table>`,
+      'VCU Compliancerapportage — Solid Workforce B.V.'
+    );
+  }
+};
+
+</script>
+<script>
+// ── AUTOMATISCHE SIGNALERING ──
+const Signalering = {
+  checkAll() {
+    this.checkCertificaten();
+    this.checkContractfases();
+    this.checkOntbrekendeBijlagen();
+  },
+
+  checkCertificaten() {
+    const dagen = DB.getInstellingen().sigDagen || 30;
+    DB.getCertificaten().forEach(c => {
+      const d = daysDiff(c.geldigTot);
+      if (d >= 0 && d <= dagen && !c.sigVerzonden) {
+        const mw = DB.getMedewerker(c.mwId);
+        DB.saveSignalering({ type:'Certificaat', medewerker: mwNaam(mw), omschrijving:`${c.naam} verloopt over ${d} dag(en) — ${formatDate(c.geldigTot)}`, urgentie: d <= 7 ? 'Kritiek' : 'Waarschuwing' });
+        c.sigVerzonden = true;
+        DB.saveCertificaat(c);
+        this.verstuurKanalen(mwNaam(mw), `VCU: ${c.naam} verloopt over ${d} dagen`);
+      }
+    });
+  },
+
+  checkContractfases() {
+    DB.getMedewerkers().filter(m=>m.cat==='Uitzend'&&(m.fase===1||m.fase===2)).forEach(mw => {
+      const weken = wekenGewerkt(mw.start);
+      if (weken >= 48 && weken <= 52) {
+        const bestaand = DB.getSignaleringen(true).find(s=>s.type==='Contractfase'&&s.medewerker===mwNaam(mw));
+        if (!bestaand) {
+          DB.saveSignalering({ type:'Contractfase', medewerker: mwNaam(mw), omschrijving:`Fase 1/2 max bijna bereikt (${weken}/52 weken) — contractherziening vereist`, urgentie:'Waarschuwing' });
+          this.verstuurKanalen(mwNaam(mw), `VCU: Contractfase overgang — ${mwNaam(mw)} (week ${weken}/52)`);
+        }
+      }
+    });
+  },
+
+  checkOntbrekendeBijlagen() {
+    DB.getMedewerkers().forEach(mw => {
+      const pct = DB.dossierCompletie(mw.id);
+      if (pct < 100) {
+        const bestaand = DB.getSignaleringen(true).find(s=>s.type==='Dossier'&&s.medewerker===mwNaam(mw));
+        if (!bestaand) {
+          const ontbrekend = Math.round((1 - pct/100) * 16);
+          DB.saveSignalering({ type:'Dossier', medewerker: mwNaam(mw), omschrijving:`${ontbrekend} bijlage(n) ontbreken in dossier (${pct}% compleet)`, urgentie:'Waarschuwing' });
+        }
+      }
+    });
+  },
+
+  verstuurKanalen(naam, bericht) {
+    const inst = DB.getInstellingen();
+    // WhatsApp: open deep-link
+    if (inst.sigWhatsapp && inst.whatsappNr) {
+      const nr = inst.whatsappNr.replace(/\D/g,'');
+      const url = `https://wa.me/${nr}?text=${encodeURIComponent(bericht)}`;
+      // Sla op voor handmatig verzenden (geen auto-open om spam te voorkomen)
+      console.log('[WhatsApp]', url);
+    }
+    // E-mail: mailto link
+    if (inst.sigEmail && inst.vgmEmail) {
+      const mailto = `mailto:${inst.vgmEmail}?subject=${encodeURIComponent('VCU Signalering: '+naam)}&body=${encodeURIComponent(bericht)}`;
+      console.log('[Email]', mailto);
+    }
+  },
+
+  // Toon WhatsApp link voor een specifieke signalering
+  stuurWhatsApp(sigId) {
+    const sig = DB.getSignaleringen(false).find(s=>s.id==sigId);
+    if (!sig) return;
+    const inst = DB.getInstellingen();
+    const nr = (inst.whatsappNr||'').replace(/\D/g,'');
+    if (!nr) { Toast.show('Geen WhatsApp nummer ingesteld in Instellingen','warn'); return; }
+    const tekst = `VCU Signalering — ${sig.medewerker}\n${sig.omschrijving}\nUrgentie: ${sig.urgentie}`;
+    window.open(`https://wa.me/${nr}?text=${encodeURIComponent(tekst)}`, '_blank');
+  },
+
+  stuurEmail(sigId) {
+    const sig = DB.getSignaleringen(false).find(s=>s.id==sigId);
+    if (!sig) return;
+    const inst = DB.getInstellingen();
+    const onderwerp = `VCU Signalering: ${sig.medewerker} — ${sig.type}`;
+    const body = `Geachte VGM-functionaris,\n\nEr is een VCU signalering voor ${sig.medewerker}:\n\n${sig.omschrijving}\n\nUrgentie: ${sig.urgentie}\nDatum: ${formatDate(sig.datum)}\n\nMet vriendelijke groet,\nVCU Managementsysteem — ${inst.bedrijfsnaam}`;
+    window.location.href = `mailto:${inst.vgmEmail}?subject=${encodeURIComponent(onderwerp)}&body=${encodeURIComponent(body)}`;
+  }
+};
+
+</script>
+<script>
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('mob-overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mob-overlay').classList.remove('open');
+}
+</script>
+</body>
+</html>
