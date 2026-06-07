@@ -1,170 +1,248 @@
-// ── AFDRUKKEN & PDF ──
-const Print = {
+// ── ALLE MODALS ──
+const Modal = {
+  open(html) {
+    document.getElementById('modal-box').innerHTML = html;
+    document.getElementById('modal-overlay').classList.add('open');
+  },
+  close() {
+    document.getElementById('modal-overlay').classList.remove('open');
+  },
+  handleOverlay(e) {
+    if (e.target === document.getElementById('modal-overlay')) this.close();
+  },
+  hdr(title) {
+    return `<div class="modal-hdr"><div class="modal-title">${title}</div><button class="modal-close" onclick="Modal.close()"><i class="ti ti-x"></i></button></div>`;
+  },
+  footer(saveCall, saveLabel='Opslaan') {
+    return `<div class="flex gap2 mt3" style="justify-content:flex-end;"><button class="btn" onclick="Modal.close()">Annuleren</button><button class="btn btn-primary" onclick="${saveCall}"><i class="ti ti-check"></i>${saveLabel}</button></div>`;
+  },
 
-  _printHtml(html, titel) {
-    const w = window.open('', '_blank', 'width=900,height=700');
-    w.document.write(`<!DOCTYPE html><html lang="nl"><head><meta charset="UTF-8">
-    <title>${titel}</title>
-    <style>
-      body { font-family: Arial, sans-serif; font-size: 12px; color: #111; margin: 20px; }
-      h1 { font-size: 18px; margin-bottom: 4px; }
-      h2 { font-size: 15px; margin: 16px 0 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
-      h3 { font-size: 13px; margin: 12px 0 6px; }
-      table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px; }
-      th { background: #f0f0f0; padding: 6px 8px; text-align: left; border: 1px solid #ccc; }
-      td { padding: 6px 8px; border: 1px solid #ddd; }
-      .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #185FA5; padding-bottom: 10px; margin-bottom: 16px; }
-      .bedrijf { font-size: 11px; color: #555; }
-      .tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; }
-      .t-green { background: #EAF3DE; color: #27500A; }
-      .t-amber { background: #FAEEDA; color: #854F0B; }
-      .t-red { background: #FCEBEB; color: #791F1F; }
-      .t-blue { background: #E6F1FB; color: #0C447C; }
-      .sig-box { border: 1px solid #ccc; height: 50px; width: 160px; display: inline-block; }
-      .checkmark { font-size: 14px; }
-      .footer { margin-top: 30px; border-top: 1px solid #ccc; padding-top: 8px; font-size: 10px; color: #888; }
-      @media print { button { display: none; } }
-    </style></head><body>
-    <div class="header">
-      <div>
-        <h1>${titel}</h1>
-        <div class="bedrijf">Solid Workforce B.V. · KVK 93619405 · Rivium 2E Straat, 2909 LG Capelle aan den IJssel</div>
-        <div class="bedrijf">Datum: ${formatDate(new Date().toISOString())}</div>
+  // ── NIEUWE MEDEWERKER ──
+  nieuwMedewerker(id=null) {
+    const mw = id ? DB.getMedewerker(id) : null;
+    const ils = DB.getInleners();
+    const ilOpts = ils.map(i=>`<option value="${i.id}" ${mw?.inlenerId==i.id?'selected':''}>${H(i.naam)}</option>`).join('');
+    const v = mw || {};
+    this.open(`${this.hdr(id ? 'Medewerker bewerken' : 'Nieuwe medewerker toevoegen')}
+    <div class="form-grid">
+      <div class="form-group"><div class="form-label">Voornaam *</div><input class="form-input" id="mw-vnaam" value="${H(v.voornaam||'')}"></div>
+      <div class="form-group"><div class="form-label">Achternaam *</div><input class="form-input" id="mw-anaam" value="${H(v.achternaam||'')}"></div>
+      <div class="form-group"><div class="form-label">Categorie *</div>
+        <select class="form-input" id="mw-cat" onchange="toggleFaseVeld()">
+          ${['Eigen','Uitzend','ZZP','Onderaannemer'].map(c=>`<option ${v.cat===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" id="fase-veld" ${v.cat!=='Uitzend'&&v.cat?'style="display:none"':''}>
+        <div class="form-label">Contractfase</div>
+        <select class="form-input" id="mw-fase">
+          <option value="1" ${v.fase==1?'selected':''}>Fase 1 — Inleen (eerste periode)</option>
+          <option value="2" ${v.fase==2?'selected':''}>Fase 2 — Inleen (max. 52 weken)</option>
+          <option value="3" ${v.fase==3?'selected':''}>Fase 3 — Bepaalde tijd (≥1 jaar)</option>
+          <option value="4" ${v.fase==4?'selected':''}>Fase 4 — Onbepaalde tijd (vast)</option>
+        </select>
+      </div>
+      <div class="form-group"><div class="form-label">Startdatum *</div><input type="date" class="form-input" id="mw-start" value="${v.start||''}"></div>
+      <div class="form-group"><div class="form-label">Opdrachtgever</div>
+        <select class="form-input" id="mw-inlener"><option value="">— Geen —</option>${ilOpts}</select>
+      </div>
+      <div class="form-group full"><div class="form-label">Functie</div><input class="form-input" id="mw-functie" value="${H(v.functie||'')}"></div>
+      <div class="form-group"><div class="form-label">E-mailadres</div><input type="email" class="form-input" id="mw-email" value="${H(v.email||'')}"></div>
+      <div class="form-group"><div class="form-label">Telefoonnummer</div><input class="form-input" id="mw-tel" value="${H(v.telefoon||'')}"></div>
+      <div class="form-group"><div class="form-label">BSN (geanonimiseerd)</div><input class="form-input" id="mw-bsn" value="${H(v.bsn||'')}"></div>
+      <div class="form-group"><div class="form-label">ID gecontroleerd</div>
+        <select class="form-input" id="mw-id"><option value="1" ${v.idGecontroleerd?'selected':''}>Ja — gecontroleerd</option><option value="0" ${!v.idGecontroleerd?'selected':''}>Nee</option></select>
       </div>
     </div>
-    ${html}
-    <div class="footer">VCU Managementsysteem — Solid Workforce B.V. · Gegenereerd op ${new Date().toLocaleString('nl-NL')}</div>
-    <br><button onclick="window.print()" style="padding:8px 16px;background:#185FA5;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:13px;">Afdrukken / Opslaan als PDF</button>
-    </body></html>`);
-    w.document.close();
-    setTimeout(() => w.print(), 500);
+    <div class="alert alert-info mt2"><i class="ti ti-signature"></i>Na opslaan kunt u direct de handtekening instellen.</div>
+    ${this.footer(`saveMedewerker(${id||'null'})`, id?'Opslaan':'Toevoegen & dossier aanmaken')}`);
+    toggleFaseVeld();
   },
 
-  handboek() {
-    const inst = DB.getInstellingen();
-    const procs = PROCEDURES.map(p=>`
-      <h3>${p.nr}. ${p.titel}</h3>
-      <table><tr><th style="width:160px;">Frequentie</th><td>${p.freq}</td></tr>
-      <tr><th>Verantwoordelijke</th><td>${p.verantw}</td></tr>
-      <tr><th>Toelichting</th><td>${p.tekst}</td></tr></table>`).join('');
-    const bijl = BIJLAGEN.map((b,i)=>`<tr><td>${i+1}</td><td>${b}</td><td>☐ Aanwezig</td></tr>`).join('');
-    this._printHtml(`
-      <h2>Inleiding</h2>
-      <p>Solid Workforce B.V. is een uitzendorganisatie die zich richt op de veilige en gezonde inzet van flexkrachten binnen risicovolle sectoren. Dit handboek beschrijft de VGM-processen conform VCU-richtlijnen.</p>
-      <h2>Deel 1 — Procedures (1 t/m 16)</h2>${procs}
-      <h2>Deel 2 — Bijlagen (1 t/m 16)</h2>
-      <table><thead><tr><th>#</th><th>Bijlage</th><th>Status</th></tr></thead><tbody>${bijl}</tbody></table>`,
-      'VCU Handboek — Solid Workforce B.V.'
-    );
-  },
+  bewerkMedewerker(id) { this.nieuwMedewerker(id); },
 
-  handboekPDF() { this.handboek(); },
-
-  handboekHoofdstuk(nr) {
-    const p = PROCEDURES.find(x=>x.nr===nr);
-    if (!p) return;
-    this._printHtml(`<h2>${p.nr}. ${p.titel}</h2>
-      <table><tr><th style="width:160px;">Frequentie</th><td>${p.freq}</td></tr>
-      <tr><th>Verantwoordelijke</th><td>${p.verantw}</td></tr>
-      <tr><th>Toelichting</th><td>${p.tekst}</td></tr></table>`,
-      `VCU Handboek — Hoofdstuk ${p.nr}: ${p.titel}`
-    );
-  },
-
-  dossierById(mwId) {
-    if (!mwId) { Toast.show('Selecteer een medewerker','warn'); return; }
-    const mw = DB.getMedewerker(mwId);
-    if (!mw) return;
-    this._printDossier(mw);
-  },
-
-  dossier() {
-    const sel = document.getElementById('dossier-select');
-    if (!sel?.value) { Toast.show('Selecteer een medewerker','warn'); return; }
-    this.dossierById(parseInt(sel.value));
-  },
-
-  dossierPDF() { this.dossier(); },
-  dossierPDFById(id) { this.dossierById(id); },
-
-  _printDossier(mw) {
-    const il = DB.getInlener(mw.inlenerId);
-    const certs = DB.getCertificaten(mw.id);
-    const bijl = DB.getBijlagen(mw.id);
-    const ht = DB.getHandtekening(mw.id);
-    const pct = DB.dossierCompletie(mw.id);
-
-    const faseLabels = {1:'Fase 1 — Inleen (eerste periode)',2:'Fase 2 — Inleen',3:'Fase 3 — Bepaalde tijd',4:'Fase 4 — Onbepaalde tijd (vast)'};
-
-    const bijlagenRows = BIJLAGEN.map((naam,i)=>{
-      const b = bijl[i+1]||{};
-      return `<tr><td>${i+1}</td><td>${naam}</td><td>${b.compleet?`<span class="tag t-green">✓ ${formatDate(b.datum)}</span>`:'<span class="tag t-amber">Ontbreekt</span>'}</td></tr>`;
-    }).join('');
-
-    const certRows = certs.length ? certs.map(c=>`<tr><td>${c.naam}</td><td>${c.nummer||'—'}</td><td>${formatDate(c.geldigTot)}</td><td>${daysDiff(c.geldigTot)<=30?'<span class="tag t-red">Verloopt binnenkort</span>':'<span class="tag t-green">Geldig</span>'}</td></tr>`).join('') : '<tr><td colspan="4">Geen certificaten geregistreerd</td></tr>';
-
-    const sigHtml = ht ? `<img src="${ht.hand}" style="max-height:50px;border:1px solid #ccc;padding:4px;">` : '<div class="sig-box">Niet ingesteld</div>';
-    const parHtml = ht?.paraaf ? `<img src="${ht.paraaf}" style="max-height:50px;border:1px solid #ccc;padding:4px;">` : '<div class="sig-box" style="width:80px;">Niet ingesteld</div>';
-
-    this._printHtml(`
-      <h2>Medewerkersdossier</h2>
-      <table>
-        <tr><th style="width:160px;">Naam</th><td>${mwNaam(mw)}</td><th style="width:120px;">BSN</th><td>${mw.bsn||'—'}</td></tr>
-        <tr><th>Categorie</th><td>${mw.cat}</td><th>Contractfase</th><td>${mw.fase?faseLabels[mw.fase]:'N.v.t.'}</td></tr>
-        <tr><th>Startdatum</th><td>${formatDate(mw.start)}</td><th>Opdrachtgever</th><td>${il?.naam||'—'}</td></tr>
-        <tr><th>Functie</th><td>${mw.functie||'—'}</td><th>Dossiercompletie</th><td>${pct}%</td></tr>
-        <tr><th>E-mail</th><td>${mw.email||'—'}</td><th>Telefoon</th><td>${mw.telefoon||'—'}</td></tr>
-        <tr><th>ID gecontroleerd</th><td>${mw.idGecontroleerd?'<span class="tag t-green">✓ Ja</span>':'<span class="tag t-amber">Nee</span>'}</td>
-            <th>VCU-voorlichting</th><td>${mw.vcuVoorlichting?'<span class="tag t-green">✓ Ja</span>':'<span class="tag t-amber">Nee</span>'}</td></tr>
-      </table>
-
-      ${mw.cat==='Uitzend'?`<h2>Contractfase (ABU/NBBU CAO)</h2>
-      <p>Huidige fase: <strong>${faseLabels[mw.fase]||'—'}</strong> · Startdatum: ${formatDate(mw.start)} · Weken gewerkt: ${wekenGewerkt(mw.start)}</p>`:''}
-
-      <h2>Handtekening & Paraaf</h2>
-      <table><tr><th>Handtekening</th><th>Paraaf</th><th>Datum ingesteld</th></tr>
-      <tr><td>${sigHtml}</td><td>${parHtml}</td><td>${ht?formatDate(ht.datum):'—'}</td></tr></table>
-
-      <h2>Certificaten & Diploma's</h2>
-      <table><thead><tr><th>Certificaat</th><th>Nummer</th><th>Geldig tot</th><th>Status</th></tr></thead>
-      <tbody>${certRows}</tbody></table>
-
-      <h2>VCU Bijlagen (16 stuks)</h2>
-      <table><thead><tr><th style="width:30px;">#</th><th>Bijlage</th><th>Status</th></tr></thead>
-      <tbody>${bijlagenRows}</tbody></table>
-
-      <h2>Handtekeningen</h2>
-      <table><tr>
-        <td style="width:33%;text-align:center;"><div style="margin-bottom:4px;font-size:11px;font-weight:bold;">Medewerker</div>${sigHtml}<div style="font-size:10px;margin-top:4px;">${mwNaam(mw)}</div></td>
-        <td style="width:33%;text-align:center;"><div style="margin-bottom:4px;font-size:11px;font-weight:bold;">Intercedent</div><div class="sig-box"></div></td>
-        <td style="width:33%;text-align:center;"><div style="margin-bottom:4px;font-size:11px;font-weight:bold;">Directie</div><div class="sig-box"></div></td>
-      </tr></table>`,
-      `Personeelsdossier — ${mwNaam(mw)}`
-    );
-  },
-
-  compliance() {
+  // ── NIEUW CERTIFICAAT ──
+  nieuwCertificaat(mwId=null) {
     const mws = DB.getMedewerkers();
-    const rows = mws.map(mw=>{
-      const pct = DB.dossierCompletie(mw.id);
-      const certs = DB.getCertificaten(mw.id);
-      const il = DB.getInlener(mw.inlenerId);
-      return `<tr>
-        <td>${mwNaam(mw)}</td>
-        <td>${mw.cat}</td>
-        <td>${mw.fase?`Fase ${mw.fase}`:'—'}</td>
-        <td>${il?.naam||'—'}</td>
-        <td>${mw.heeftHandtekening?'<span class="tag t-green">✓</span>':'<span class="tag t-amber">Nee</span>'}</td>
-        <td>${pct===100?`<span class="tag t-green">100%</span>`:`<span class="tag t-amber">${pct}%</span>`}</td>
-        <td>${certs.length>0?certs.map(c=>`${c.naam} (${formatDate(c.geldigTot)})`).join(', '):'Geen'}</td>
-        <td>${pct===100&&mw.heeftHandtekening?'<span class="tag t-green">Compliant</span>':'<span class="tag t-amber">Onvolledig</span>'}</td>
-      </tr>`;
-    }).join('');
-    this._printHtml(`
-      <h2>Compliancerapportage</h2>
-      <table><thead><tr><th>Naam</th><th>Categorie</th><th>Fase</th><th>Inlener</th><th>Handtek.</th><th>Dossier</th><th>Certificaten</th><th>VCU Status</th></tr></thead>
-      <tbody>${rows}</tbody></table>`,
-      'VCU Compliancerapportage — Solid Workforce B.V.'
-    );
+    const mwOpts = mws.map(m=>`<option value="${m.id}" ${mwId==m.id?'selected':''}>${H(mwNaam(m))}</option>`).join('');
+    this.open(`${this.hdr('Certificaat / Diploma toevoegen')}
+    <div class="form-grid">
+      <div class="form-group full"><div class="form-label">Medewerker *</div><select class="form-input" id="cert-mw">${mwOpts}</select></div>
+      <div class="form-group"><div class="form-label">Type certificaat *</div>
+        <select class="form-input" id="cert-naam">${CERT_TYPEN.map(t=>`<option>${t}</option>`).join('')}</select>
+      </div>
+      <div class="form-group"><div class="form-label">Certificaatnummer</div><input class="form-input" id="cert-nr" placeholder="VCA-2025-001"></div>
+      <div class="form-group"><div class="form-label">Geldig vanaf</div><input type="date" class="form-input" id="cert-van"></div>
+      <div class="form-group"><div class="form-label">Geldig tot *</div><input type="date" class="form-input" id="cert-tot"></div>
+    </div>
+    <div class="mt2">
+      <div class="form-label">Upload diploma / certificaat (PDF of afbeelding)</div>
+      <div class="upload-zone mt1" id="cert-zone" onclick="document.getElementById('cert-file').click()">
+        <i class="ti ti-upload"></i><div style="font-size:13px;">Klik of sleep PDF / PNG / JPG hier</div>
+      </div>
+      <input type="file" id="cert-file" accept=".pdf,image/*" class="hidden" onchange="handleCertUpload(event)">
+    </div>
+    <div class="alert alert-info mt2"><i class="ti ti-bell"></i>Signalering wordt automatisch ingesteld ${DB.getInstellingen().sigDagen} dagen voor vervaldatum.</div>
+    ${this.footer('saveCertificaatModal()')}`);
+  },
+
+  // ── INCIDENT BEKIJKEN ──
+  bekijkIncident(id) {
+    const inc = DB.getIncidenten().find(i=>i.id==id);
+    const mw = DB.getMedewerker(inc?.mwId);
+    this.open(`${this.hdr('Incident details')}
+    <table style="font-size:13px;width:100%;">
+      <tr><td style="color:var(--text2);padding:6px 0;width:140px;">Datum/Tijdstip</td><td>${formatDate(inc.datum)} ${inc.tijdstip||''}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Type</td><td>${H(inc.type)}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Medewerker</td><td>${H(mwNaam(mw))}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Locatie</td><td>${H(inc.locatie||'—')}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Beschrijving</td><td>${H(inc.beschrijving||'—')}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Letsel</td><td>${inc.letsel?'<span class="tag tag-red">Ja</span>':'<span class="tag tag-green">Nee</span>'}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Schade</td><td>${inc.schade?'<span class="tag tag-red">Ja</span>':'<span class="tag tag-green">Nee</span>'}</td></tr>
+      <tr><td style="color:var(--text2);padding:6px 0;">Status</td><td><span class="tag ${inc.status==='Open'?'tag-amber':'tag-green'}">${inc.status}</span></td></tr>
+    </table>
+    <div class="flex gap2 mt3" style="justify-content:flex-end;">
+      ${inc.status==='Open'?`<button class="btn btn-success" onclick="sluitIncident(${id});Modal.close()"><i class="ti ti-check"></i>Afhandelen</button>`:''}
+      <button class="btn" onclick="Modal.close()">Sluiten</button>
+    </div>`);
+  },
+
+  // ── NIEUW INCIDENT ──
+  nieuwIncident() {
+    const mws = DB.getMedewerkers();
+    const ils = DB.getInleners();
+    this.open(`${this.hdr('Incident / Bijna-Ongeval melden (Bijlage 14)')}
+    <div class="form-grid">
+      <div class="form-group"><div class="form-label">Datum *</div><input type="date" class="form-input" id="inc-datum" value="${new Date().toISOString().split('T')[0]}"></div>
+      <div class="form-group"><div class="form-label">Tijdstip</div><input type="time" class="form-input" id="inc-tijd"></div>
+      <div class="form-group"><div class="form-label">Type *</div>
+        <select class="form-input" id="inc-type"><option>Bijna-ongeval</option><option>Incident</option><option>Bedrijfsongeval</option></select>
+      </div>
+      <div class="form-group"><div class="form-label">Medewerker</div>
+        <select class="form-input" id="inc-mw">${mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('')}</select>
+      </div>
+      <div class="form-group full"><div class="form-label">Locatie</div><input class="form-input" id="inc-loc" placeholder="Werklocatie / adres"></div>
+      <div class="form-group full"><div class="form-label">Beschrijving *</div><textarea class="form-input" id="inc-omschr" rows="3" placeholder="Omschrijf het incident..."></textarea></div>
+      <div class="form-group"><div class="form-label">Lichamelijk letsel?</div><select class="form-input" id="inc-letsel"><option value="0">Nee</option><option value="1">Ja</option></select></div>
+      <div class="form-group"><div class="form-label">Materiële schade?</div><select class="form-input" id="inc-schade"><option value="0">Nee</option><option value="1">Ja</option></select></div>
+    </div>
+    ${this.footer('saveIncidentModal()')}`);
+  },
+
+  // ── NIEUWE EVALUATIE ──
+  nieuweEvaluatie() {
+    const mws = DB.getMedewerkers();
+    const ils = DB.getInleners();
+    const sterField = (id, label) => `<div class="form-group"><div class="form-label">${label}</div><select class="form-input" id="${id}"><option value="1">⭐ 1</option><option value="2">⭐⭐ 2</option><option value="3">⭐⭐⭐ 3</option><option value="4" selected>⭐⭐⭐⭐ 4</option><option value="5">⭐⭐⭐⭐⭐ 5</option></select></div>`;
+    this.open(`${this.hdr('Nieuwe evaluatie (Bijlage 13)')}
+    <div class="form-grid">
+      <div class="form-group"><div class="form-label">Medewerker *</div><select class="form-input" id="ev-mw">${mws.map(m=>`<option value="${m.id}">${H(mwNaam(m))}</option>`).join('')}</select></div>
+      <div class="form-group"><div class="form-label">Inlener *</div><select class="form-input" id="ev-il">${ils.map(i=>`<option value="${i.id}">${H(i.naam)}</option>`).join('')}</select></div>
+      <div class="form-group full"><div class="form-label">Datum</div><input type="date" class="form-input" id="ev-datum" value="${new Date().toISOString().split('T')[0]}"></div>
+      ${sterField('ev-veilig','Veiligheidsregels')}${sterField('ev-pbm','PBM gebruik')}
+      ${sterField('ev-kwal','Kwaliteit werk')}${sterField('ev-werk','Werkhouding')}
+      <div class="form-group"><div class="form-label">Inlener tevreden?</div><select class="form-input" id="ev-it"><option value="1">Ja — voortzetten</option><option value="0">Nee — verbeterpunten</option></select></div>
+      <div class="form-group"><div class="form-label">Medewerker tevreden?</div><select class="form-input" id="ev-ut"><option value="1">Ja — wil blijven</option><option value="0">Nee — verbeterpunten</option></select></div>
+      <div class="form-group full"><div class="form-label">Verbeterpunten / opmerkingen</div><textarea class="form-input" id="ev-verb" rows="2"></textarea></div>
+    </div>
+    ${this.footer('saveEvaluatieModal()')}`);
+  },
+
+  // ── NIEUWE INLENER ──
+  nieuweInlener() { this.bewerkInlener(null); },
+  bewerkInlener(id) {
+    const il = id ? DB.getInlener(id) : null;
+    const v = il || {};
+    this.open(`${this.hdr(id ? 'Inlener bewerken' : 'Nieuwe inlener toevoegen')}
+    <div class="form-grid">
+      <div class="form-group full"><div class="form-label">Bedrijfsnaam *</div><input class="form-input" id="il-naam" value="${H(v.naam||'')}"></div>
+      <div class="form-group"><div class="form-label">KVK-nummer</div><input class="form-input" id="il-kvk" value="${H(v.kvk||'')}"></div>
+      <div class="form-group"><div class="form-label">Sector</div><input class="form-input" id="il-sector" value="${H(v.sector||'')}"></div>
+      <div class="form-group"><div class="form-label">Contactpersoon</div><input class="form-input" id="il-contact" value="${H(v.contact||'')}"></div>
+      <div class="form-group"><div class="form-label">E-mail</div><input type="email" class="form-input" id="il-email" value="${H(v.email||'')}"></div>
+      <div class="form-group"><div class="form-label">Telefoon</div><input class="form-input" id="il-tel" value="${H(v.telefoon||'')}"></div>
+    </div>
+    ${this.footer(`saveInlenerModal(${id||'null'})`)}`);
   }
 };
+
+// ── SAVE FUNCTIES ──
+function toggleFaseVeld() {
+  const cat = document.getElementById('mw-cat')?.value;
+  const veld = document.getElementById('fase-veld');
+  if (veld) veld.style.display = cat==='Uitzend' ? '' : 'none';
+}
+
+function saveMedewerker(id) {
+  const vnaam = document.getElementById('mw-vnaam')?.value?.trim();
+  const anaam = document.getElementById('mw-anaam')?.value?.trim();
+  if (!vnaam||!anaam) { Toast.show('Vul naam in','warn'); return; }
+  const cat = document.getElementById('mw-cat')?.value;
+  const fase = cat==='Uitzend' ? parseInt(document.getElementById('mw-fase')?.value||1) : null;
+  const mw = {
+    id: id||0, voornaam:vnaam, achternaam:anaam, cat,fase,
+    start: document.getElementById('mw-start')?.value||new Date().toISOString().split('T')[0],
+    inlenerId: parseInt(document.getElementById('mw-inlener')?.value||0)||null,
+    functie: document.getElementById('mw-functie')?.value||'',
+    email: document.getElementById('mw-email')?.value||'',
+    telefoon: document.getElementById('mw-tel')?.value||'',
+    bsn: document.getElementById('mw-bsn')?.value||'',
+    idGecontroleerd: document.getElementById('mw-id')?.value==='1',
+    vcuVoorlichting:false, heeftHandtekening:false, actief:true
+  };
+  if (id) { const bestaand=DB.getMedewerker(id); mw.heeftHandtekening=bestaand?.heeftHandtekening||false; mw.vcuVoorlichting=bestaand?.vcuVoorlichting||false; }
+  DB.saveMedewerker(mw);
+  Modal.close();
+  Toast.show(id?'Medewerker bijgewerkt':'Medewerker aangemaakt — dossier gereed','success');
+  App.navigate('medewerkers');
+  App.updateBadges();
+}
+
+function handleCertUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const zone = document.getElementById('cert-zone');
+  zone.classList.add('has-file');
+  zone.innerHTML = `<i class="ti ti-check"></i><div>${H(file.name)}</div>`;
+  const reader = new FileReader();
+  reader.onload = ev => { window._certBestand = {naam:file.name, data:ev.target.result}; };
+  reader.readAsDataURL(file);
+}
+
+function saveCertificaatModal() {
+  const mwId = parseInt(document.getElementById('cert-mw')?.value||0);
+  const naam = document.getElementById('cert-naam')?.value;
+  const tot = document.getElementById('cert-tot')?.value;
+  if (!mwId||!naam||!tot) { Toast.show('Vul alle verplichte velden in','warn'); return; }
+  DB.saveCertificaat({id:0, mwId, naam, nummer:document.getElementById('cert-nr')?.value||'', geldigVanaf:document.getElementById('cert-van')?.value||'', geldigTot:tot, bestand:window._certBestand||null, sigVerzonden:false});
+  window._certBestand = null;
+  Modal.close();
+  Toast.show('Certificaat opgeslagen — signalering ingesteld','success');
+  Signalering.checkAll();
+  App.navigate('certificaten');
+  App.updateBadges();
+}
+
+function saveIncidentModal() {
+  const beschrijving = document.getElementById('inc-omschr')?.value?.trim();
+  if (!beschrijving) { Toast.show('Vul een beschrijving in','warn'); return; }
+  DB.saveIncident({id:0, mwId:parseInt(document.getElementById('inc-mw')?.value||0), datum:document.getElementById('inc-datum')?.value, tijdstip:document.getElementById('inc-tijd')?.value, type:document.getElementById('inc-type')?.value, locatie:document.getElementById('inc-loc')?.value, beschrijving, letsel:document.getElementById('inc-letsel')?.value==='1', schade:document.getElementById('inc-schade')?.value==='1', status:'Open', melder:'VGM-functionaris'});
+  Modal.close();
+  Toast.show('Incident geregistreerd','success');
+  App.navigate('incidenten');
+}
+
+function saveEvaluatieModal() {
+  DB.saveEvaluatie({id:0, mwId:parseInt(document.getElementById('ev-mw')?.value||0), inlenerId:parseInt(document.getElementById('ev-il')?.value||0), datum:document.getElementById('ev-datum')?.value, scoreVeiligheid:parseInt(document.getElementById('ev-veilig')?.value), scorePBM:parseInt(document.getElementById('ev-pbm')?.value), scoreKwaliteit:parseInt(document.getElementById('ev-kwal')?.value), scoreWerkhouding:parseInt(document.getElementById('ev-werk')?.value), inlenerTevreden:document.getElementById('ev-it')?.value==='1', ukTevreden:document.getElementById('ev-ut')?.value==='1', verbeterpunten:document.getElementById('ev-verb')?.value});
+  Modal.close();
+  Toast.show('Evaluatie opgeslagen','success');
+  App.navigate('evaluaties');
+}
+
+function saveInlenerModal(id) {
+  const naam = document.getElementById('il-naam')?.value?.trim();
+  if (!naam) { Toast.show('Vul bedrijfsnaam in','warn'); return; }
+  DB.saveInlener({id:id||0, naam, kvk:document.getElementById('il-kvk')?.value, sector:document.getElementById('il-sector')?.value, contact:document.getElementById('il-contact')?.value, email:document.getElementById('il-email')?.value, telefoon:document.getElementById('il-tel')?.value, actief:true});
+  Modal.close();
+  Toast.show('Inlener opgeslagen','success');
+  App.navigate('inleners');
+}
