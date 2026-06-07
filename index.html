@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCU Managementsysteem — Solid Workforce B.V.</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+</head>
+<body>
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo">
+      <div class="logo-icon"><i class="ti ti-shield-check"></i></div>
+      <div>
+        <div class="logo-name">Solid Workforce</div>
+        <div class="logo-sub">VCU Systeem v2.0</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Overzicht</div>
+      <a class="nav-item active" data-page="dashboard"><i class="ti ti-layout-dashboard"></i>Dashboard</a>
+      <a class="nav-item" data-page="signalering"><i class="ti ti-bell"></i>Signaleringen<span class="badge danger" id="nb-sig">0</span></a>
+
+      <div class="nav-section">Medewerkers</div>
+      <a class="nav-item" data-page="medewerkers"><i class="ti ti-users"></i>Medewerkers<span class="badge blue" id="nb-mw">0</span></a>
+      <a class="nav-item" data-page="dossier"><i class="ti ti-folder-open"></i>Personeelsdossiers</a>
+      <a class="nav-item" data-page="handtekening"><i class="ti ti-signature"></i>Handtekening & Paraaf</a>
+
+      <div class="nav-section">VCU Compliance</div>
+      <a class="nav-item" data-page="bijlagen"><i class="ti ti-files"></i>16 Bijlagen</a>
+      <a class="nav-item" data-page="certificaten"><i class="ti ti-certificate"></i>Certificaten & VCA<span class="badge amber" id="nb-cert">0</span></a>
+      <a class="nav-item" data-page="incidenten"><i class="ti ti-alert-triangle"></i>Incidenten</a>
+      <a class="nav-item" data-page="evaluaties"><i class="ti ti-star"></i>Evaluaties</a>
+
+      <div class="nav-section">Handboek</div>
+      <a class="nav-item" data-page="handboek"><i class="ti ti-book"></i>VCU Handboek</a>
+
+      <div class="nav-section">Beheer</div>
+      <a class="nav-item" data-page="inleners"><i class="ti ti-building"></i>Inleners</a>
+      <a class="nav-item" data-page="rapporten"><i class="ti ti-printer"></i>Afdrukken & Export</a>
+      <a class="nav-item" data-page="instellingen"><i class="ti ti-settings"></i>Instellingen</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-export" onclick="App.exportData()"><i class="ti ti-download"></i> Data opslaan</button>
+      <button class="btn-export" onclick="App.importData()"><i class="ti ti-upload"></i> Data laden</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="App.handleImport(event)">
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="main-content">
+    <!-- Pages worden hier geladen door JavaScript -->
+  </main>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="Modal.handleOverlay(event)">
+  <div class="modal" id="modal-box"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- PRINT FRAME (voor PDF) -->
+<iframe id="print-frame" style="display:none"></iframe>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/print.js"></script>
+<script src="js/signalering.js"></script>
+</body>
+</html>
